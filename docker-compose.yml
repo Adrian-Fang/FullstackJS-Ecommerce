@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    networks:
+      - mall-app
+
+  mysql:
+    image: mysql:8.0
+    networks:
+      - mall-app
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - mysql_data:/var/lib/mysql
+    environment: 
+      MYSQL_DATABASE:mall
+      MYSQL_USER:root
+      MYSQL_PASSWORD:root
+      MYSQL_ROOT_PASSWORD:root
+
+  client:
+    build: ./client
+    stdin_open:true
+    depends_on: 
+      - server
+    ports:
+      - "80:8081"
+    networks:
+      - mall-app
+
+   networks:
+      mall-app:
+        driver: bridge
+
+volumes:
+   mysql_data
