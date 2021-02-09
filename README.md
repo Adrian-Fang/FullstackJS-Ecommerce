@@ -15,14 +15,12 @@ mysql
 
 ### 功能列表 | Features and Functions
 
-```
 - [x] 登录注册 | Login & Registration
 - [x] 商品详情 | Product List & Details Page (Very Simple Version)
 - [x] 购物车管理 | Shopping Cart
 - [x] 结算页面 | checkout (Including address management)
 - [x] 在线支付 | Online Payment (Used Omise(Thailand) for testing)
 - [x] 简易订单管理 (Not fully suppoted yet)
-```
 
 ### How to run project after clone
 
