@@ -1,4 +1,5 @@
 var express = require('express');
+require('dotenv').config();
 var path = require('path');
 var $conf = require('./conf/conf');
 var logger = require('morgan');

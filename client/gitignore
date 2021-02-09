@@ -43,8 +43,3 @@ package-lock.json
 # Nuxt.js build / generate output
 .nuxt
 dist
-
-# editor
-.vscode/
-server/.vscode/
-server/*.rest

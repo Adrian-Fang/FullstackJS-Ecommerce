@@ -1,7 +1,8 @@
 # About
 
-项目属性：商城网站 | Type of Project: E-commerce Website
-商家管理后台还未实现 ｜ Currently No admin dashboard yet...
+- 项目属性：商城网站 | Type of Project: E-commerce Website
+- 已发布｜ Deployed http://one-mall.netlify.app
+- 商家管理后台还未实现 ｜ Currently No admin dashboard yet...
 
 ## 技术栈 | Technology Stack
 
@@ -15,31 +16,29 @@ mysql
 ## 功能列表 | Features and Functions
 
 ```
-- 登录注册 | Login & Registration
-- 商品详情 | Product List & Details Page (Very Simple Version)
-- 购物车管理 | Shopping Cart
-- 结算页面 | checkout (Including address management)
-- 在线支付 | Online Payment (Used Omise(Thailand) for testing)
-- 订单管理 (Not fully suppoted yet)
+[-] 登录注册 | Login & Registration
+[-] 商品详情 | Product List & Details Page (Very Simple Version)
+[-] 购物车管理 | Shopping Cart
+[-] 结算页面 | checkout (Including address management)
+[-] 在线支付 | Online Payment (Used Omise(Thailand) for testing)
+[-] 简易订单管理 (Not fully suppoted yet)
 ```
 
 ## How to run project after clone
 
 ```javascript
 
-// For Client end
+// For Client
 ....
 cd Mall-vue-express
 npm install
 npm run dev
-// Then Website runs on: http://localhost:8081
 
-// For Server end
+// For Server
+// modify conf.sample.js & create your database first
 cd Mall-vue-express/server
 npm install
 npm start
-# Then Express Server runs on: https://localhost:443
-
 
 ```
 
@@ -56,6 +55,7 @@ npm start
 - Remember to copy create database, and configure connection in `server/conf/conf.js`
 - The `server.crt`, and `server.key` can be used for enabling https, the configuration is in
   `/build/webpack.dev.conf.js:43-45`
-  
-## 一起完善？Teamup？
-如果想一起实现更多功能，请提 Issue ｜ Create Issue to work together;
+
+## Collaborate?
+
+如果想一起实现更多功能，请提 Issue ｜ Create Issue to collaborate;

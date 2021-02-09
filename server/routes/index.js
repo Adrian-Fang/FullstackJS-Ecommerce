@@ -3,10 +3,10 @@ var router = express.Router();
 var mysql = require('mysql');
 var $conf = require('../conf/conf');
 // 使用连接池
-var pool = mysql.createPool($conf.mysql);
+var pool = mysql.createPool($conf.mysql[process.env.NODE_ENV]);
 router.use(express.static('public'));
 // 查询商品列表
-router.get('/list', function(req, res, next) {
+router.get('/list', function (req, res, next) {
   const reqQuery = Object.assign(req.query); //TBD: No idea why cannot direcly use req.query...
   const sortNum = reqQuery.sort;
   // const secContent = req.query('secContent');

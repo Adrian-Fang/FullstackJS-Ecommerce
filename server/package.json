@@ -1,7 +1,8 @@
 {
-  "name": "server",
-  "version": "0.0.0",
+  "name": "one-mall-server",
+  "version": "0.1.0",
   "private": true,
+  "author": "Adrian Fang",
   "scripts": {
     "start": "nodemon ./bin/www"
   },
@@ -10,11 +11,12 @@
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "merge-descriptors": "^1.0.1",
     "morgan": "~1.9.0",
-    "mysql": "latest",
+    "mysql": "^2.18.1",
     "omise": "^0.8.3",
     "pug": "^3.0.0"
   },

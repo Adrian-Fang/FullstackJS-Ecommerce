@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var mysql = require('mysql');
+
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var utils = require('../util/util');
@@ -10,9 +11,9 @@ var omise = require('omise')({
 });
 
 // 使用连接池
-var pool = mysql.createPool($conf.mysql);
+var pool = mysql.createPool($conf.mysql[process.env.NODE_ENV]);
 // router.use(express.static('public'));
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   if (pool) {
     res.json({
       status: '0000',
@@ -155,7 +156,7 @@ router.get('/me', (req, res) => {
 });
 
 //登出接口
-router.get('/logout', function(req, res, next) {
+router.get('/logout', function (req, res, next) {
   res.cookie('userId', '', {
     path: '/',
     maxAge: -1,
@@ -172,7 +173,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 //检查是否登录
-router.get('/authorisation', function(req, res, next) {
+router.get('/authorisation', function (req, res, next) {
   if (req.cookies.userId) {
     res.json({
       status: '1',
@@ -539,7 +540,10 @@ router.post('/submitOrder', (req, res, next) => {
                   )});`;
                   pool.query(checkCartItemQuery, (err, result) => {
                     if (err) {
-                      console.log('Error occured during checking cart items:', checkedCartItems.join(','));
+                      console.log(
+                        'Error occured during checking cart items:',
+                        checkedCartItems.join(',')
+                      );
                       res.json({
                         status: '-1',
                         msg: err.message,
@@ -593,7 +597,10 @@ router.post('/submitOrder', (req, res, next) => {
             )});`;
             pool.query(checkCartItemQuery, (err, result) => {
               if (err) {
-                console.log('Error occured during checking cart items:', checkedCartItems.join(','));
+                console.log(
+                  'Error occured during checking cart items:',
+                  checkedCartItems.join(',')
+                );
                 res.json({
                   status: '-1',
                   msg: err.message,
@@ -636,7 +643,9 @@ router.get('/getOrderData', (req, res, next) => {
       //Step 1: Processing orders
       let orderListIds = [];
       orderResult.forEach((v) => orderListIds.push(v.orderId));
-      let productsQuery = `SELECT * FROM OMS_order_product_relation WHERE orderId IN (${orderListIds.join(',')});`;
+      let productsQuery = `SELECT * FROM OMS_order_product_relation WHERE orderId IN (${orderListIds.join(
+        ','
+      )});`;
       pool.query(productsQuery, (err, productResult) => {
         if (err) console.log(err.message);
         // Step 2: Processing orders-products
