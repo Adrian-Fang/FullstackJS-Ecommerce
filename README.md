@@ -21,6 +21,7 @@ mysql
 - [x] 结算页面 | checkout (Including address management)
 - [x] 在线支付 | Online Payment (Used Omise(Thailand) for testing)
 - [x] 简易订单管理 (Not fully suppoted yet)
+- [x] 国际化 ｜ i18n supported now (2022-May-16), check it out on client branch
 
 ### How to run project after clone
 
@@ -43,7 +44,6 @@ npm start
 ### Todos
 
 - [ ] （Mall）Filter and Sorting...；
-- [ ] （i18n）Not supported now；
 - [ ] （数据库）商品分类及属性；
 - [ ] （前端）商城商品分类下拉菜单，商品 Filter
 - [ ] （前端）后台管理系统（商品，权限，员工，物流，订单管理，结算及发票等）
