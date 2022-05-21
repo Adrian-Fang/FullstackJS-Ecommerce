@@ -37,9 +37,15 @@ npm run dev
 // modify conf.sample.js & create your database first
 cd Mall-vue-express/server
 npm install
+Modify conf.js to make sure configuration work
 npm start
 
 ```
+
+## Test API with Postman
+- Make sure your database is configured well, and mysql is up and running
+- login with API call to```http://localhost:3000/api/users/login```, to get a jwt token
+- Add 'Authorization' to Headers, with value as ```Bearer token_paste_here```
 
 ### Todos
 

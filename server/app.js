@@ -1,7 +1,7 @@
 var express = require('express');
 require('dotenv').config();
 var path = require('path');
-var $conf = require('./conf/conf');
+var $conf = require('./conf');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var jwt = require('jsonwebtoken');
@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //WhiteList URLs no need for user Authorisation
 const whiteListUrl = {
-  get: ['/api/list', '/api/getDetails', '/api/users/logout', '/robots.txt'],
+  get: ['/api/list', '/api/getDetails', '/api/users/logout', '/api/users/authorisation', '/api/search', '/robots.txt'],
   post: ['/api/users/login', '/api/users/register'],
 };
 
@@ -33,27 +33,38 @@ const hasOneOf = (str, arr) => {
 };
 
 app.all('*', (req, res, next) => {
-  // 拦截请求，验证 Token
-  let method = req.method.toLowerCase();
-  let requestPath = req.path;
-  if (whiteListUrl[method] && hasOneOf(requestPath, whiteListUrl[method])) next();
-  else {
-    const bearerAuth = req.headers['authorization'];
-    if (!bearerAuth) return res.status(401).send('Access denied, please login');
-    else {
-      const token = bearerAuth.split(' ')[1];
-      jwt.verify(token, $conf.secret, (err, decodedToken) => {
-        if (err) {
-          //TBD: processing with token expiration case
-          return res.status(401).send('token verfication error');
-        } else {
-          if (!req.userId) {
-            console.log('User just logged in, adding user id to request...');
-            req.userId = decodedToken._id;
+  // deal with access-control-allow-origin error
+  res.header('Access-Control-Allow-Origin', $conf.allowdOrigin[process.env.NODE_ENV]);
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+  res.header('X-Powered-By', 'express');
+  res.header('Cache-Control', 'public,max-age=60000');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    // 拦截请求，验证 Token
+    let method = req.method.toLowerCase();
+    let requestPath = req.path;
+    if (whiteListUrl[method] && hasOneOf(requestPath, whiteListUrl[method])) {
+      next();
+    } else {
+      const bearerAuth = req.headers['authorization'];
+      if (!bearerAuth) return res.status(401).send('Access denied, please login');
+      else {
+        const token = bearerAuth.split(' ')[1];
+        jwt.verify(token, $conf.secret, (err, decodedToken) => {
+          if (err) {
+            //TBD: processing with token expiration case
+            return res.status(401).send('token verfication error');
+          } else {
+            if (!req.userId) {
+              req.userId = decodedToken._id;
+            }
+            next();
           }
-          next();
-        }
-      });
+        });
+      }
     }
   }
 });

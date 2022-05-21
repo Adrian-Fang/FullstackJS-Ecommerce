@@ -1,6 +1,6 @@
 // This Util is just draft, and NOT in any use, @2020-08-16
 
-var $conf = require('../conf/conf');
+var $conf = require('../conf');
 
 var omise = require('omise')({
     secretKey: $conf.omiseSecretKey,

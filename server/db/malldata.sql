@@ -4,166 +4,92 @@ use `mall`;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
--- MySQL dump 10.13  Distrib 8.0.21, for osx10.15 (x86_64)
---
--- Host: localhost    Database: mall
--- ------------------------------------------------------
--- Server version	8.0.21
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8 */;
 
 --
--- Table structure for table `addresslist`
+-- Database: `malldata`
 --
 
-DROP TABLE IF EXISTS `addresslist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `addresslist` (
-  `addressId` int NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `addresslist`
+--
+drop table if exists addresslist;
+CREATE TABLE IF NOT EXISTS `addresslist` (
+  `addressId` int(16) NOT NULL AUTO_INCREMENT,
   `userId` varchar(64) NOT NULL,
   `userName` varchar(64) NOT NULL,
-  `fullAddress` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `postCode` int NOT NULL,
+  `streetName` varchar(256) NOT NULL,
+  `postCode` int(32) NOT NULL,
   `tel` varchar(32) NOT NULL,
   `isDefault` tinyint(1) NOT NULL,
   PRIMARY KEY (`addressId`)
-) ENGINE=InnoDB AUTO_INCREMENT=10016 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 --
--- Table structure for table `banners`
+-- 转存表中的数据 `addresslist`
 --
 
-DROP TABLE IF EXISTS `banners`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `banners` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `bannerName` varchar(128) NOT NULL,
-  `bannerUri` varchar(256) NOT NULL,
-  `isEnabled` tinyint(1) NOT NULL DEFAULT '1',
-  `bannerOrder` int NOT NULL,
-  `desc` varchar(256) NOT NULL,
-  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-  `createdBy` varchar(50) NOT NULL DEFAULT 'Admin',
-  `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `section` varchar(25) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO `addresslist` (`addressId`, `userId`, `userName`, `streetName`, `postCode`, `tel`, `isDefault`) VALUES
+(10001, '123456', '吴大大', '深圳市龙岗区万科四季花城', 518116, '18842687533', 0),
+(10002, '123456', '廖大大', '福建省三明市梅列区江滨号院', 366100, '18888886688', 0),
+(10004, '123456', '李大大', '广东省深圳市龙岗区天安云谷', 518116, '18888886611', 1),
+(10005, '123456', '李白', '广东省深圳市福田区篱笆旁', 88888888, '6666666', 0),
+(10006, '18842687533', '吴大大', '广东省深圳市龙岗区四季花城', 5611000, '18842687555', 0),
+(10008, '18842687533', '廖大大', '辽宁省大连市高新区因特摩尔1019', 116000, '88888888', 0),
+(10009, '18842687533', '余大大', '辽宁省大连市高新区数码广场软景e居2013', 116000, '66666666', 1),
+(10010, '18842687533', 'json', '四川省成都市天府软件园11栋20楼', 99999999, '99999999', 0);
+
+-- --------------------------------------------------------
 
 --
-
--- Table structure for table `cartlist`
+-- 表的结构 `cartlist`
 --
-
-DROP TABLE IF EXISTS `cartlist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cartlist` (
-  `cartId` int NOT NULL AUTO_INCREMENT,
+drop table if exists cartlist;
+CREATE TABLE IF NOT EXISTS `cartlist` (
+  `cartId` int(16) NOT NULL AUTO_INCREMENT,
   `userId` varchar(64) NOT NULL,
-  `productId` int NOT NULL,
+  `productId` int(32) NOT NULL,
   `productName` varchar(128) NOT NULL,
-  `productPrice` decimal(12,2) NOT NULL,
-  `checked` tinyint NOT NULL DEFAULT '0',
-  `qty` int NOT NULL,
+  `productPrice` int(32) NOT NULL,
+  `checked` varchar(32) NOT NULL,
+  `productNum` int(32) NOT NULL,
   `productImg` varchar(256) NOT NULL,
-  `totalPrice` decimal(12,2) NOT NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted` tinyint DEFAULT '0',
-  `deletedAt` timestamp NULL DEFAULT NULL,
+  `totalPrice` varchar(64) NOT NULL,
   PRIMARY KEY (`cartId`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
-
---
--- Table structure for table `CRM_company`
---
-
-DROP TABLE IF EXISTS `CRM_company`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `CRM_company` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tax_id` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `CRM_company`
+-- 表的结构 `goods`
 --
-
-LOCK TABLES `CRM_company` WRITE;
-/*!40000 ALTER TABLE `CRM_company` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CRM_company` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `CRM_user`
---
-
-DROP TABLE IF EXISTS `CRM_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `CRM_user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `userId` varchar(64) NOT NULL,
-  `userName` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `userPwd` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `title` char(10) DEFAULT NULL,
-  `firstName` varchar(30) DEFAULT NULL,
-  `lastName` varchar(30) DEFAULT NULL,
-  `birthday` date DEFAULT NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `goods`
---
-
-DROP TABLE IF EXISTS `goods`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `goods` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `productId` int NOT NULL,
+drop table if exists products;
+CREATE TABLE IF NOT EXISTS `goods` (
+  `id` int(32) NOT NULL AUTO_INCREMENT,
+  `productId` int(32) NOT NULL,
   `productName` varchar(128) NOT NULL,
-  `productPrice` decimal(12,2) NOT NULL,
+  `productPrice` int(32) NOT NULL,
   `checked` varchar(32) NOT NULL DEFAULT '0',
-  `productNum` int NOT NULL,
+  `productNum` int(32) NOT NULL,
   `productImg` varchar(256) NOT NULL,
   `sub_title` varchar(128) NOT NULL,
-  `limit_num` int NOT NULL,
+  `limit_num` int(16) NOT NULL,
   `desc` varchar(256) NOT NULL,
   `descImg` varchar(32) NOT NULL,
   `productDetails` varchar(126) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `goods` 
--- In case the data Not totally compatible with database (should be compatible), modify the sample data below
+-- 转存表中的数据 `goods`
 --
+
 INSERT INTO `goods` (`id`, `productId`, `productName`, `productPrice`, `checked`, `productNum`, `productImg`, `sub_title`, `limit_num`, `desc`, `descImg`, `productDetails`) VALUES
 (1, 10001, '小米6', 2499, '0', 0, 'mi6.jpg', '此仅为支付测试商品 拍下不会发货\n', 10, '', 'xiaomi6.jpg', '小米6 全网通 4GB+64GB 亮黑色 移动联通电信4G手机 双卡双待 小米6变焦双'),
 (2, 10002, '小米笔记本', 3999, '0', 0, 'note.jpg', '此仅为支付测试商品 拍下不会发货\n', 10, '', 'xiaomi-matebook.jpg', '小米(MI)Air 13.3英寸全金属轻薄笔记本电脑(i5-7200U 8G 256G固态硬盘 全高清屏 背光键盘 Win10)银'),
@@ -182,82 +108,41 @@ INSERT INTO `goods` (`id`, `productId`, `productName`, `productPrice`, `checked`
 (15, 10015, '自拍杆', 34, '0', 0, 'zipai.jpg', '此仅为支付测试商品 拍下不会发货\n', 10, '', '', '荣耀自拍杆轻巧便携自拍即插即用手机通用AF11L（黑色）'),
 (16, 10016, 'iphoneX', 8388, '0', 0, 'iphoneX.jpg', '【256G银9088！国行正品,京东配送】', 10, '', 'iphoneX.jpg', 'Apple iPhone X (A1865) 64GB 深空灰色 移动联通电信4G手机');
 
+-- --------------------------------------------------------
+-- 新表的结构 `OMS_orders` ，修改于2020-08-12 18:40
 
-
+CREATE TABLE IF NOT EXISTS `OMS_orders`(
+`id` INT(16) PRIMARY KEY NOT NULL ,
+`orderId` INT(16) NOT NULL,
+`userId` varchar(64) NOT NULL,
+`subTotal` DECIMAL(12,2) NOT NULL COMMENT 'product charge',
+`shipping` DECIMAL(12,2) NOT NULL COMMENT 'shipping charge',
+`insurance` DECIMAL(12,2) NOT NULL COMMENT 'insurance charge',
+`discount` DECIMAL(12,2) NOT NULL COMMENT 'discount amount for order',
+`contactPerson` varchar(64) NOT NULL COMMENT '收货人',
+`contactNumber` varchar(32) NOT NULL COMMENT '收货人号码',
+`contactAddress` varchar(250) NOT NULL COMMENT '收货人地址',
+`contactPostalCode` varchar(20) NOT NULL COMMENT '收货人地址邮编',
+`orderStatus` TINYINT NOT NULL COMMENT '0=null, 1=to pay, 2=to deliver, 3=complete, 7=cancelled, 8=refunded 9=deleted',
+`paymentOption` varchar(32),
+`paymentStatus` TINYINT COMMENT '0=null, 1=to pay, 2=partial paid, 3=paid',
+`deliveryStatus` TINYINT COMMENT '0=null, 1=in process, 2=deliverd',
+`createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP() COMMENT '下单时间',
+`paymentTime`  TIMESTAMP COMMENT '付款时间',
+`deliveryTime` TIMESTAMP COMMENT '送达时间',
+UNIQUE(orderId)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 --
--- Table structure for table `OMS_order_product_relation`
+-- 旧表的结构 `orderlist`
 --
-
-DROP TABLE IF EXISTS `OMS_order_product_relation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `OMS_order_product_relation` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(64) NOT NULL,
-  `productId` int NOT NULL,
-  `productName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `productPrice` decimal(12,2) NOT NULL,
-  `productQty` int NOT NULL,
-  `productImg` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `productDiscount` decimal(12,2) DEFAULT NULL,
-  `status` tinyint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `orderId` (`orderId`,`productId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `OMS_orders`
---
-
-DROP TABLE IF EXISTS `OMS_orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `OMS_orders` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(64) NOT NULL,
-  `userId` varchar(64) NOT NULL,
-  `subTotal` decimal(12,2) NOT NULL COMMENT 'product charge',
-  `shipping` decimal(12,2) NOT NULL COMMENT 'shipping charge',
-  `insurance` decimal(12,2) NOT NULL COMMENT 'insurance charge',
-  `discount` decimal(12,2) NOT NULL COMMENT 'discount amount for order',
-  `contactPerson` varchar(64) NOT NULL COMMENT '收货人',
-  `contactNumber` varchar(32) NOT NULL COMMENT '收货人号码',
-  `contactAddress` varchar(250) NOT NULL COMMENT '收货人地址',
-  `contactPostalCode` varchar(20) NOT NULL COMMENT '收货人地址邮编',
-  `buyerExpDeliveryDate` date DEFAULT NULL COMMENT '期望送达日期',
-  `buyerExpDelTimeFrom` time DEFAULT NULL COMMENT '期望送达时间-起始',
-  `buyerExpDelTimeTo` time DEFAULT NULL COMMENT '期望送达时间-结束',
-  `buyerComment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Buyer''s comments when submit order',
-  `orderStatus` tinyint NOT NULL COMMENT '0=null, 1=to pay,2=to deliver, 3=complete, 8=cancelled 9=refunded',
-  `createdAt` timestamp NOT NULL COMMENT '下单时间',
-  `paymentOption` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `paymentStatus` tinyint NOT NULL DEFAULT '1' COMMENT '0=null, 1=to pay, 2=partial paid, 3=paid',
-  `paymentTime` timestamp NULL DEFAULT NULL COMMENT '付款时间',
-  `deliveryStatus` tinyint NOT NULL DEFAULT '0' COMMENT '0=null, 1=in process, 2=deliverd',
-  `deliveryCompany` varchar(59) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '快递公司',
-  `deliveyTrackingId` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '快递单号',
-  `deliveryTime` timestamp NULL DEFAULT NULL COMMENT '送达时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `orderId` (`orderId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `orderlist`
---
-
-DROP TABLE IF EXISTS `orderlist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `orderlist` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'order data entry ID',
+drop table if exists orderlist;
+CREATE TABLE IF NOT EXISTS `orderlist` (
   `orderId` varchar(128) NOT NULL,
   `userId` varchar(64) NOT NULL,
-  `productId` int NOT NULL,
+  `productId` int(32) NOT NULL,
   `productName` varchar(128) NOT NULL,
-  `productPrice` int NOT NULL,
-  `productNum` int NOT NULL,
+  `productPrice` int(32) NOT NULL,
+  `productNum` int(32) NOT NULL,
   `productImg` varchar(256) NOT NULL,
   `totalPrice` varchar(64) NOT NULL,
   `streetName` varchar(256) NOT NULL,
@@ -269,7 +154,37 @@ CREATE TABLE `orderlist` (
   `shipPrice` varchar(32) NOT NULL COMMENT '配送费',
   `freightRisk` varchar(32) NOT NULL COMMENT '运费险',
   `createDate` varchar(32) NOT NULL,
-  `ifPay` int NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `ifPay` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `orderlist`
+--
+
+INSERT INTO `orderlist` (`orderId`, `userId`, `productId`, `productName`, `productPrice`, `productNum`, `productImg`, `totalPrice`, `streetName`, `postName`, `postCode`, `tel`, `itemPrice`, `discount`, `shipPrice`, `freightRisk`, `createDate`, `ifPay`) VALUES
+('6226201801101639364', '18842687533', 10002, '小米笔记本', 3999, 1, 'note.jpg', '3999', '辽宁省大连市高新区数码广场软景e居2013', '余大大', '116000', '66666666', '3999', '13.2', '0', '5', '2018-01-10 16:39:36', 1);
+
+-- --------------------------------------------------------
+
+
+-- ----------------------------
+-- Table structure for CRM_user
+-- ----------------------------
+DROP TABLE IF EXISTS `CRM_user`;
+CREATE TABLE `CRM_user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `userId` varchar(64) NOT NULL,
+  `userName` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `userPwd` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8_general_ci DEFAULT NULL,
+  `title` char(10) DEFAULT NULL,
+  `firstName` varchar(30) DEFAULT NULL,
+  `lastName` varchar(30) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userId` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3;
+
+SET FOREIGN_KEY_CHECKS = 1;
+

@@ -1,4 +1,3 @@
-// remove .sample from filename after clone,
 // and modify your own production conn configuration
 
 module.exports = {
@@ -8,6 +7,8 @@ module.exports = {
       user: 'root',
       password: 'root',
       database: 'mall',
+      port: 3306,
+      charset: 'UTF8_GENERAL_CI',
     },
     production: {
       host: 'your host',
@@ -15,6 +16,10 @@ module.exports = {
       password: 'password',
       database: 'your database name',
     },
+  },
+  allowdOrigin: {
+      production: 'https://yourown.appurl.app',
+      dev: 'http://localhost:8081'
   },
 
   //Processing User Login Token

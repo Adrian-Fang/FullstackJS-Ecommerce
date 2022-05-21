@@ -1,4 +1,4 @@
-var $conf = require('../conf/conf');
+var $conf = require('../conf');
 
 Date.prototype.Format = function (fmt) {
   var o = {
