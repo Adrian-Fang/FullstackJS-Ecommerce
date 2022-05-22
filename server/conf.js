@@ -21,6 +21,10 @@ module.exports = {
       production: 'https://yourown.appurl.app',
       dev: 'http://localhost:8081'
   },
+    emailAccountAuth: {
+    user: 'your-account@outlook.com', // this configuration works with the transporter setting in ./util/mailer.js 
+    pass: 'yourpassword'
+  },
 
   //Processing User Login Token
   secret: 'whatever-key-you like', //

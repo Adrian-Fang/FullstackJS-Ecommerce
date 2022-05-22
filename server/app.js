@@ -1,16 +1,16 @@
-var express = require('express');
+const express =require('express');
 require('dotenv').config();
-var path = require('path');
-var $conf = require('./conf');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var jwt = require('jsonwebtoken');
-var cors = require('cors');
+const path = require('path');
+const $conf = require('./conf');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const indexRoute = require('./routes/index');
 const usersRoute = require('./routes/users');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('view engine', 'pug');
@@ -24,8 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //WhiteList URLs no need for user Authorisation
 const whiteListUrl = {
-  get: ['/api/list', '/api/getDetails', '/api/users/logout', '/api/users/authorisation', '/api/search', '/robots.txt'],
-  post: ['/api/users/login', '/api/users/register'],
+  get: ['/api/list', '/api/getDetails', '/api/users/logout', '/api/users/authorisation','/api/users/checkUserExist', '/api/search', '/robots.txt'],
+  post: ['/api/users/login', '/api/users/register', '/api/users/verifyUser'],
 };
 
 const hasOneOf = (str, arr) => {
@@ -68,6 +68,7 @@ app.all('*', (req, res, next) => {
     }
   }
 });
+
 app.get('/', (req, res, next) => {
   if (req.protocol === 'https') {
     res.status(200).send('Accessing server via https');
@@ -82,7 +83,7 @@ app.use('/api/users', usersRoute);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next();
 });
