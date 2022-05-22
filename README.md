@@ -22,6 +22,7 @@ mysql
 - [x] 在线支付 | Online Payment | Using Omise(Thailand) 
 - [x] 简易订单管理 | Order Management System | Not fully suppoted so far
 - [x] 国际化 ｜ i18n supported now (2022-May-16) | Language completed, Time & Money format to implement
+- [x] 邮件通知 | Email notification (2022-May-22) | Could extend to orders et al.
 
 ### How to run project after clone
 

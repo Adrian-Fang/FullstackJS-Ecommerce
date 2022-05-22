@@ -2,10 +2,13 @@ var router = require('express').Router();
 
 //Controllers
 const UserController = require('../controller/user')
+const AuthController = require('../controller/auth/auth')
+const EmailController = require('../controller/v1/mailer')
 
 //APIs: User
-router.route('/').get(UserController.index)
+router.route('/').get(EmailController.sendTestEmail, UserController.index)
 router.route('/checkUserExist').get(UserController.checkUserExist)
+router.route('/verifyUser').post(AuthController.verifyEmailOrMobile)
 router.route('/register').post(UserController.register)
 router.route('/login').post(UserController.login)
 router.route('/logout').get(UserController.logout)
