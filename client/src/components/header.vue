@@ -1,21 +1,18 @@
 <template>
-  <div class="header-container py-3">
-    <div class="logo">
+<div>
+  <div class="logo">
       <a href="/">
-        <img src="/static/logo.png" />
+        <img src="/static/one-mall-logo.png" />
       </a>
-    </div>
+  </div>
 
-    <div class="search-box d-flex">
-      <input type="text" v-model="searchKeyword" placeholder="Search products, Stores, #F49A99..." />
-      <v-btn depressed="" tile color="grey" class="search-button" @click="search()">
-        <v-icon color="white">mdi-magnify</v-icon>
-      </v-btn>
-    </div>
+  <div class="header-container">
+    
+    <div class="collection" v-for="(c, i) in category" :key="i" @click="goto(c.link)">{{c.text}}</div>
 
-    <div class="d-flex mx-10">
+    <div class="d-flex">
       <v-btn icon color="#F49A99" class="mr-10">
-        <v-icon size="32">mdi-heart-multiple-outline</v-icon>
+        <v-icon size="32">mdi-heart-plus-outline</v-icon>
       </v-btn>
 
       <v-menu open-on-hover offset-y>
@@ -26,37 +23,57 @@
             </v-btn>
           </v-badge>
         </template>
-        <v-card tile loading>
+        <v-card tile style="border-top:5px solid #F49A99" v-if="cartLen">
           <v-card-title class="text-subtitle-1 pt-3 pb-1">
-            {{ cartLen }} Items
+            {{ cartLen }} {{$t('cart.numberOfItems')}}
             <v-spacer></v-spacer>
-            <router-link to="/cart" class="text-decoration-none lighten-2"><span>View Cart</span></router-link>
+            <router-link to="/cart" class="text-decoration-none lighten-2"
+              ><span>{{$t('cart.viewCart')}}</span></router-link
+            >
           </v-card-title>
 
           <v-divider></v-divider>
           <v-list dense two-line width="250px">
             <v-list-item v-for="item in cartItems" :key="item.key">
-              <v-list-item-avatar> <v-img :src="processImg(item.productImg)"></v-img></v-list-item-avatar>
+              <v-list-item-avatar>
+                <v-img :src="processImg(item.productImg)"></v-img>
+              </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title v-text="item.productName"></v-list-item-title>
                 <v-list-item-subtitle v-html="processCartDisplay(item)"></v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-icon :color="item.active ? 'red accent-4' : 'grey'">mdi-trash-can-outline</v-icon>
+                <v-icon :color="item.active ? 'red accent-4' : 'grey'"
+                  >mdi-trash-can-outline</v-icon
+                >
               </v-list-item-icon>
             </v-list-item>
           </v-list>
           <v-divider></v-divider>
-          <v-btn block tile color="primary lighten-2">Checkout</v-btn>
+          <v-btn block tile color="primary lighten-2" @click="$router.push('/cart')"
+            >{{$t('cart.checkout')}}</v-btn
+          >
+        </v-card>
+        <v-card tile style="border-top:5px solid #F49A99" v-else width="250px">
+          <v-card-title class="text-subtitle-1 pt-3 pb-1"> {{ cartLen }} {{$t('cart.numberOfItems')}}</v-card-title>
+          <v-spacer></v-spacer>
+          <v-img class="mx-auto my-auto white" src="/static/icons/empty-cart.png"></v-img>
+          <v-btn block tile color="primary lighten-2" @click="$router.push('/mall')"
+            >{{$t('cart.goShopping')}}</v-btn
+          >
         </v-card>
       </v-menu>
     </div>
   </div>
+</div>
+  
 </template>
 
 <script>
-const conf = require('../utils/conf');
+
+import { formatMoney } from "../utils/locale";
+
 export default {
   name: 'Header',
   data() {
@@ -66,6 +83,32 @@ export default {
       queryResultList: [],
       page: 1,
       pageSize: 8,
+      category:[
+        {
+          text: "New Arrival",
+          link: "/mall"
+        },
+        {
+          text: "Women",
+          link: "/mall"
+        },
+        {
+          text: "Men",
+          link: "/mall"
+        },
+        {
+          text: "Other",
+          link: "/mall"
+        },
+        {
+          text: "Promoted",
+          link: "/mall"
+        },
+        {
+          text: "Flash",
+          link: "/mall"
+        }
+      ]
     };
   },
   computed: {
@@ -77,18 +120,22 @@ export default {
     },
   },
   methods: {
+    goto(link) {
+      this.$router.push(link);
+    },
     processImg(img) {
       //processing multiple images products
       return `/static/${img.split(',')[0]}`;
     },
-    formatMoney: function(value) {
-      return new Intl.NumberFormat(conf.locale, {
-        style: 'currency',
-        currency: conf.currency,
-      }).format(value);
-    },
     processCartDisplay(item) {
-      return '<strong>' + item.qty + ' × </strong>' + '<strong>' + this.formatMoney(item.productPrice) + '</strong>';
+      return (
+        '<strong>' +
+        item.qty +
+        ' × </strong>' +
+        '<strong>' +
+        formatMoney(item.productPrice) +
+        '</strong>'
+      );
     },
     search() {
       if (!this.searchKeyword) return;
@@ -104,7 +151,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             if (!res.result.length) {
               // this.$store.commit('checkGoodLen', false);
             } else {
@@ -119,20 +166,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  text-align: center;
+    img {
+      width: 200px;
+      height: 80px;
+    }
+  }
+
 .header-container {
   display: flex;
-  justify-content: space-around;
-  line-height: 20px;
-  text-align: center;
+  align-items: center;
+  justify-content:space-evenly;
+  padding-bottom: 10px;
+
   border-bottom: 1px solid #efeff4;
-  .logo {
-    img {
-      margin: 2px 10px 0 10px;
-      width: 80%;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  
+  .collection {
+    cursor: pointer;
+    &:hover {
+      font-weight: 600;
+      color: #F49A99;
     }
   }
   .search-box {
     width: 50%;
+    height: 40px;
     font-size: 14px;
     input {
       color: #555555;
@@ -151,7 +212,7 @@ export default {
       margin-left: -2px;
     }
   }
-  .cartTitle {
+  .cart {
     border-top: 2px solid #f49a99;
   }
 }

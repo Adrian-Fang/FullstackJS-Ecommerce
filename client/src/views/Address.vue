@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="checkout-page">
       <div class="container">
         <div class="checkout-addr">
@@ -9,19 +9,11 @@
             </h2>
           </div>
           <!-- process step -->
-          <div class="check-step">
-            <ul>
-              <li class="cur"><span>确认</span>地址</li>
-              <li><span>查看</span>订单</li>
-              <li><span>创建</span>支付</li>
-              <li><span>订单</span>成功</li>
-            </ul>
-          </div>
 
           <!-- address list -->
           <div class="page-title-normal checkout-title">
             <h2>
-              <span>选择收货地址</span>
+              <span>管理收货地址</span>
             </h2>
           </div>
           <div class="addr-list-wrap">
@@ -77,29 +69,6 @@
           </div>
 
           <!-- shipping method-->
-          <div class="page-title-normal checkout-title">
-            <h2>
-              <span>配送方式</span>
-            </h2>
-          </div>
-          <div class="shipping-method-wrap">
-            <div class="shipping-method">
-              <ul>
-                <li class="check">
-                  <div class="name">标准配送</div>
-                  <div class="price">免邮</div>
-                  <div class="shipping-tips">
-                    <p>若要选择其他快递,请与客服联系并补运费差价!</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="next-btn-wrap">
-            <router-link class="btn btn--m btn--red" :to="{ path: 'orderconfirm', query: { addressId: addrId } }"
-              >提交订单</router-link
-            >
-          </div>
         </div>
       </div>
     </div>
@@ -110,6 +79,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      mdShow: false,
       addressData: [],
       limitNum: 3,
       delAdr: '',
@@ -137,7 +107,7 @@ export default {
     getAddressList() {
       axios.get('/api/users/addressList').then((res) => {
         res = res.data;
-        if (res.status === '1') {
+        if (res.status == '1') {
           this.addressData = res.result;
           // console.log(res.result);
         } else {
@@ -160,7 +130,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             this.addressData.splice(index, 1);
             this.mdShow = false;
           }
@@ -186,10 +156,16 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             this.insertShow = false;
           }
         });
+    },
+    closeInsert() {
+      this.insertShow = false;
+    },
+    closeModal() {
+      this.mdShow = false;
     },
     setDefault(item) {
       this.addressData.forEach((list, index) => {
@@ -208,10 +184,17 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             // console.log('设置成功');
           }
         });
+    },
+    scrollTop() {
+      var promise = new Promise(() => {
+        this.$router.push({
+          path: `/`,
+        });
+      }).then($('html,body').animate({ scrollTop: 480 }, 500));
     },
   },
 };

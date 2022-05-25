@@ -1,0 +1,101 @@
+{
+  "message": "你好 i18n !!",
+  "saveBtn":"保存",
+  "cancelBtn":"取消",
+  "closeBtn":"关闭",
+  "home": {
+    "link1":"品牌",
+    "link2":"买家",
+    "link3":"精选",
+    "login":"登入",
+    "logout":"退出",
+    "register":"注册"
+  },
+  "registration":{
+    "join": "注册One Mall账号",
+    "name": "姓名",
+    "email":"电子邮箱",
+    "password":"密码",
+    "notice":"你的密码会被加密后存储，任何人无法直接读取。",
+    "nextStep": "下一步",
+    "createAccount":"创建账户"
+  },
+  "login":{
+    "loginWithEmail":"使用邮箱登陆",
+    "email":"电子邮箱",
+    "password":"密码",
+    "rememberMe":"保持登陆",
+    "forgotPassword":"忘记密码？",
+    "login":"登陆",
+    "reset":"重置"
+  },
+  "accountValidation":{
+    "inputVeriCode":"输入验证码",
+    "continue":"下一步",
+    "resendCode":"重发验证码"
+  },
+  "mall":{
+    "allResults":"所有结果",
+    "all":"所有价格",
+    "price":"价格",
+    "taxIncluded": "价格已含税",
+    "sortBy":"排序",
+    "details":"详情",
+    "addToCart":"加购物车",
+    "loadMore":"加载更多",
+    "available":"库存",
+    "buyNow":"立即购买",
+    "productDesc":"商品描述",
+    "productSpecs":"产品参数"
+  },
+  "cart": {
+    "loginRequired": "请先登陆，再使用购物车。",   
+    "addedToCart": "已添加至购物车。",
+    "cartEmpty":"购物车空空如也，买起来～",
+    "selectAll":"全选",
+    "selected":"已选",
+    "cartAlertHeader":"购物车提醒",
+    "keepIt":"不删了",
+    "shipTo":"配送至",
+    "orderSummary":"订单摘要",
+    "subTotal":"商品总计",
+    "shippingFee":"运费",
+    "applyCoupon":"兑换",
+    "discount":"折扣",
+    "total":"总计",
+    "item":"件",
+    "delete":"删除",
+    "quantityShort":"数量",
+    "viewCart":"查看购物车",
+    "numberOfItems":"件商品",
+    "goShopping":"开始选购",
+    "checkout":"前往付款",
+    "checkoutPage":"订单结算",
+    "shippingItems":"配送清单"
+  },
+   "address":{
+    "shipTo":"联系人",
+    "deliveryAddress":"收货地址",
+    "noAddressFound":"未找到地址",
+    "addNewAddress":"添加新地址",
+    "phoneNumber":"电话号码",
+    "adress":"详细地址",
+    "postalCode":"邮政编码",
+    "country":"国家/地区",
+    "province":"省/市",
+    "city":"市/区",
+    "county":"县/镇/街道",
+    "makeDefault":"设为默认地址"
+  },
+  "checkout":{
+    "paymentOptions":"付款方式",
+    "addBankCard":"添加一张银行卡",
+    "placeOrder":"提交订单",
+    "orderSuccess":"下单成功",
+    "thanksForBuying":"感谢使用壹和万物",
+    "orderId":"订单编号",
+    "suceessMessage":"我们正在全力处理本订单，请耐心等待稍后通知。",
+    "viewOrder":"查看订单",
+    "continueShopping":"继续购物"
+  }
+}

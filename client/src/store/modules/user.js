@@ -1,8 +1,8 @@
-var authApi = require('../../api/auth');
+const authApi = require('../../api/auth');
 import { setToken, getToken, removeToken } from '@/utils/auth'; //deal with local
 
 const getters = {
-  isLoggedIn: (state) => state.token !== null,
+  isLoggedIn: (state) => state.token && state.token.length > 0,
   authStatus: (state) => state.status,
   getProfile: (state) => state.profile,
   isProfileLoaded: (state) => !!Object.keys(state.profile).length,
@@ -42,18 +42,18 @@ const actions = {
     });
   },
 
-  auth({ commit }, token) {
+  auth(context, token) {
     return new Promise((resolve, reject) => {
       authApi
         .authorisation(token)
         .then((res) => {
           if (parseInt(res.status) === 401) {
-            console.log('token validation error');
+            context.dispatch('logout');
             reject(new Error('token validation error'));
           } else {
             setToken(res.data.token);
             resolve(res.data.rules.page); //TBD: rules not finished yet
-            commit('SET_RULES', res.data.rules.component); ////not finished yet
+            context.commit('SET_RULES', res.data.rules.component); ////not finished yet
           }
         })
         .catch((err) => {
@@ -63,14 +63,9 @@ const actions = {
   },
   register(context, params) {
     return new Promise((resolve, reject) => {
-      authApi
-        .register(params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      authApi.register(params)
+        .then(res => resolve(res))
+        .catch(err => reject(err));
     });
   },
   getAddress(context, params) {
@@ -87,38 +82,23 @@ const actions = {
   },
   addNewAddress(context, params) {
     return new Promise((resolve, reject) => {
-      authApi
-        .addAddress(params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      authApi.addAddress(params)
+        .then(res => resolve(res))
+        .catch(err => reject(err));
     });
   },
   setDefaultAddress(context, params) {
     return new Promise((resolve, reject) => {
-      authApi
-        .setDefaultAddress(params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      authApi.setDefaultAddress(params)
+        .then(res => resolve(res))
+        .catch(err => reject(err));
     });
   },
   submitOrder(context, params) {
     return new Promise((resolve, reject) => {
-      authApi
-        .submitOrder(params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      authApi.submitOrder(params)
+        .then(res => resolve(res))
+        .catch(err => reject(err));
     });
   },
   // not too much user data, already got from login
@@ -136,22 +116,13 @@ const actions = {
 
   logout({ commit }) {
     // setToken('');
+    commit('AUTH_LOGOUT');
+    removeToken();
+    commit('DESTROY_CART');
     return new Promise((resolve, reject) => {
-      authApi
-        .logout()
-        .then((res) => {
-          console.log('cookies cleaned by server...');
-          commit('AUTH_LOGOUT');
-          console.log('state data clear by vuex...');
-          removeToken();
-          console.log('token cookies cleaned by client...');
-          commit('DESTROY_CART');
-          console.log('cart has been cleared...');
-          resolve();
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      authApi.logout()
+        .then(res => resolve(res))
+        .catch(err =>  reject(err));
     });
   },
 };
@@ -168,7 +139,7 @@ const mutations = {
     state.status = 'error';
   },
   AUTH_LOGOUT(state) {
-    state.token = null;
+    state.token = '';
     state.profile = {};
     state.status = '';
   },
@@ -176,7 +147,7 @@ const mutations = {
     state.status = 'loading';
   },
   USER_SUCCESS(state, profile) {
-    state.status = 'sucess';
+    state.status = 'success';
     //Vue.set(state, profile);
     state.profile = profile;
   },

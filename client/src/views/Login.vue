@@ -4,18 +4,19 @@
     <Header />
     <div class="container">
       <v-card width="400" class="mx-auto mt-5">
-        <v-card-title>Email Login</v-card-title>
+        <v-card-title>{{$t('login.loginWithEmail')}}</v-card-title>
         <v-card-text>
           <v-form ref="loginForm" v-model="valid" lazy-validation>
             <v-text-field
-              label="Email"
+              :label="$t('login.email')"
               prepend-icon="mdi-email-open"
               v-model="loginForm.userId"
               :rules="emailRules"
             ></v-text-field>
             <v-text-field
               :type="showPassword ? 'text' : 'password'"
-              label="Password"
+              :label="$t('login.password')"
+              autocomplete="on"
               prepend-icon="mdi-lock"
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="showPassword = !showPassword"
@@ -27,13 +28,20 @@
           </v-form>
         </v-card-text>
         <v-row justify="space-between" align="center" class="mx-4 my-0">
-          <v-checkbox dense label="Remember me" v-model="rememberAccount" width="200px"></v-checkbox>
-          <a>Forgot password?</a>
+          <v-checkbox
+            dense
+            :label="$t('login.rememberMe')"
+            v-model="rememberAccount"
+            width="200px"
+          ></v-checkbox>
+          <a>{{$t('login.forgotPassword')}}</a>
         </v-row>
 
         <v-card-actions class="ml-3">
-          <v-btn color="primary" @click="handleLogin">Login</v-btn>
-          <v-btn color="accent" @click="reset">Reset</v-btn>
+          <v-row>
+            <v-col><v-btn color="primary" block @click="handleLogin">{{$t('login.login')}}</v-btn></v-col>  
+            <v-col><v-btn color="accent" block @click="reset">{{$t('login.reset')}}</v-btn></v-col> 
+          </v-row>
         </v-card-actions>
       </v-card>
     </div>
@@ -43,7 +51,6 @@
 <script>
 import NavBar from '@/components/NavBar.vue';
 import Header from '@/components/Header.vue';
-import axios from 'axios';
 export default {
   components: { NavBar, Header },
   data() {
@@ -55,8 +62,14 @@ export default {
         userId: '',
         userPwd: '',
       },
-      emailRules: [(v) => !!v || 'Email is required', (v) => /.+@.+/.test(v) || 'Seems like unvalid email address'],
-      passwordRules: [(v) => !!v || 'Password is required', (v) => v.length >= 6 || 'Please input valid password'],
+      emailRules: [
+        (v) => !!v || 'Email is required',
+        (v) => /.+@.+/.test(v) || 'Seems like unvalid email address',
+      ],
+      passwordRules: [
+        (v) => !!v || 'Password is required',
+        (v) => v.length >= 6 || 'Please input valid password',
+      ],
     };
   },
   methods: {

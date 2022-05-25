@@ -3,7 +3,7 @@ const $conf = require('../conf')
 const util = require('../util/util')
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.office365.com',
+    host: 'smtp.office365.com', // change this for your email service provider
     port: 587,
     tls: {
         ciphers: 'SSLv3'
@@ -14,9 +14,8 @@ const transporter = nodemailer.createTransport({
 module.exports = {
     sendEmail: (email, ref_code) => {
         transporter.sendMail(email, (err, info) => {
-            if(err) return console.log(err)
-
-            console.log(util.getCurrentDateTime(), '| Email sent, ref: ', ref_code);
+            if(err) { console.log(err) } 
+            else { console.log(util.getCurrentDateTime(), '| Email sent by mailerService ref: ', ref_code);}
         });
     }
 }

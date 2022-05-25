@@ -2,18 +2,19 @@
   <div>
     <nav-bar></nav-bar>
     <nav-header></nav-header>
-    <top-menu></top-menu>
     <div class="container">
-      <div class="empty-cart" v-if="!cartList">
+      <div class="empty-cart" v-if="cartList.length == 0">
         <div class="content">
-          <p class="font-weight-light mt-5 mb-5">Your cart is empty now</p>
-          <v-img src="static/images/cart-empty-new.png" style="margin:40px auto; width:100px; display:block;" />
-          <v-btn color="success" href="https://localhost:8081/#/mall">Shopping Now</v-btn>
+          <p class="font-weight-light mt-5 mb-5">{{$t('cart.cartEmpty')}}</p>
+          <v-img contain src="static/icons/empty-cart.png" width="400px" class="mx-auto" />
+          <v-btn class="my-5" color="primary lighten-2" @click="$router.push('/mall')"
+            >{{$t('cart.goShopping')}}</v-btn
+          >
         </div>
       </div>
 
-      <div class="cart-container" v-if="cartList">
-        <div class="cart">
+      <div class="cart-container mt-5" v-else>
+        <v-card class="cart">
           <v-card flat dense class="cart-list-header pl-2">
             <v-checkbox
               v-model="allSelected"
@@ -21,10 +22,10 @@
               :indeterminate="partialSelected"
               @click.native.prevent="toggleSelectAll()"
             ></v-checkbox>
-            <span>SELECT ALL</span>
+            <span>{{$t('cart.selectAll')}}</span>
             <span v-if="selectedCount" class="selected">
-              (Selected
-              <em class="font-weight-bold primary--text">{{ selectedCount }}</em> items)
+              ({{$t('cart.selected')}}
+              <em class="font-weight-bold primary--text">{{ selectedCount }}</em> {{$t('cart.item')}})
             </span>
           </v-card>
 
@@ -38,7 +39,9 @@
                 <span class="font-weight-medium">{{ item.productName }}</span>
               </div>
               <div class="price mt-2">
-                <span class="font-weight-medium primary--text">{{ formatMoney(item.productPrice) }}</span>
+                <span class="font-weight-medium primary--text">{{
+                  formatMoney(item.productPrice)
+                }}</span>
                 <br />
                 <span class="market text-decoration-line-through">{{ formatMoney(3000) }}</span>
               </div>
@@ -53,59 +56,62 @@
               </div>
             </div>
           </v-card>
-        </div>
+        </v-card>
         <v-dialog v-model="dialog" width="500px" transition="dialog-transition">
           <v-card>
-            <v-card-title class="headline grey lighten-2 text-h6 py-2">Shopping Cart</v-card-title>
+            <v-card-title class="headline grey lighten-2 text-h6 py-2">{{$t('cart.cartAlertHeader')}}</v-card-title>
             <v-card-text class="py-2">
-              You've only 1 unit left for this item, you are going to remove this item from your cart?
+              You've only 1 unit left for this item, you are going to remove this item from your
+              cart?
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="info" text @click="dialog = false">
-                Keep It
+                {{$t('cart.keepIt')}}
               </v-btn>
               <v-btn color="error " text @click="handleDeleteCartItem()">
-                Delete
+                {{$t('cart.delete')}}
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-spacer></v-spacer>
-        <v-card flat class="summary pa-3">
-          <div class="location mb-1">Shipping to</div>
+        <v-card class="summary pa-3">
+          <div class="location mb-1">{{$t('cart.shipTo')}}</div>
           <v-icon color="#999999">mdi-map-marker-radius-outline</v-icon>
           <span class="region ml-1">{{ userLocation }}</span>
           <v-divider class="my-3"></v-divider>
 
-          <h4>Order Summary</h4>
+          <h4>{{$t('cart.orderSummary')}}</h4>
           <div class="cost-item">
-            <div class="ml-1">Sub-Total</div>
+            <div class="ml-1">{{$t('cart.subTotal')}}</div>
             <v-spacer></v-spacer>
             <div class="mr-1">{{ formatMoney(calcSubTotal) }}</div>
           </div>
           <div class="cost-item">
-            <div class="ml-1">Shipping</div>
+            <div class="ml-1">{{$t('cart.shippingFee')}}</div>
             <v-spacer></v-spacer>
             <div class="mr-1">{{ formatMoney(shipping) }}</div>
           </div>
           <div class="promo-code my-2">
             <input v-model="promoCode" placeholder="Enter Promo Code" />
-            <v-btn tile depressed color="gray darken-4 gray--text" class="apply-btn">Apply</v-btn>
+            <v-btn tile depressed color="gray darken-4 gray--text" class="apply-btn">{{$t('cart.applyCoupon')}}</v-btn>
           </div>
           <div class="cost-item">
-            <div class="ml-1 font-weight-bold">Total</div>
+            <div class="ml-1 font-weight-bold">{{$t('cart.total')}}</div>
             <v-spacer></v-spacer>
             <div class="mr-1 font-weight-bold">{{ formatMoney(calcTotal) }}</div>
           </div>
-          <v-btn class="mt-3" block color="primary" :disabled="!selectedCount" @click="checkOut">Check Out</v-btn>
+          <v-btn class="mt-3" block color="primary" :disabled="!selectedCount" @click="checkOut"
+            >{{$t('cart.checkout')}}</v-btn
+          >
         </v-card>
       </div>
     </div>
     <v-snackbar v-model="snackbar">
       <span class="ml-4" v-html="snackText"></span>
-      <v-btn class="px-1 py-1" text color="primary" @click.native="snackbar = false">Close</v-btn>
+      <v-btn class="px-1 py-1" text color="primary" @click.native="snackbar = false">{{$t('closeBtn')}}</v-btn>
     </v-snackbar>
   </div>
 </template>
@@ -113,13 +119,10 @@
 <script>
 import NavBar from '@/components/NavBar.vue';
 import Header from '@/components/Header.vue';
-import TopMenu from '@/components/TopMenu.vue';
-import axios from 'axios';
 const conf = require('../utils/conf');
 export default {
   components: {
     'nav-bar': NavBar,
-    'top-menu': TopMenu,
     'nav-header': Header,
   },
   data() {
@@ -136,7 +139,9 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch('getCartList');
+    if(this.$store.getters['isLoggedIn']) {
+      this.$store.dispatch('getCartList');
+    }
   },
   computed: {
     cartList() {
@@ -188,10 +193,13 @@ export default {
         pId: this.itemToDelete.productId,
       };
       this.$store.dispatch('delCartItem', params);
+      this.$store.dispatch('getCartList');
       this.dialog = false;
-      this.snackText = `Item [<span class='primary--text'> ${this.itemToDelete.productName}</span> ] deleted from cart`;
-      this.snackbar = true;
-      this.itemToDelete = {};
+      this.$nextTick(() => {
+        this.snackText = `Item [<span class='primary--text'> ${this.itemToDelete.productName}</span> ] deleted from cart`;
+        this.snackbar = true;
+        this.itemToDelete = {};
+      });
     },
     checkOut() {
       //add items from Cart to checkout list
@@ -230,7 +238,6 @@ export default {
 .container {
   margin: 0 auto;
   padding: 0;
-  background-color: #f4f4f4 !important;
 }
 
 .empty-cart {
@@ -306,7 +313,7 @@ export default {
     }
   }
   .summary {
-    width: 32%;
+    width: 33%;
     height: 100%;
     margin: 0 auto;
     color: #605f5f;

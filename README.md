@@ -39,7 +39,7 @@ npm run dev
 cd Mall-vue-express/server
 npm install
 Modify conf.js to make sure configuration work
-npm start
+npm run dev
 
 ```
 
@@ -52,6 +52,7 @@ npm start
 
 - [ ] （Mall）Filter and Sorting...；
 - [ ] （数据库）商品分类及属性；
+- [ ]  (前端) Error interception & handling such as 500, 403, 401...
 - [ ] （前端）商城商品分类下拉菜单，商品 Filter
 - [ ] （前端）后台管理系统（商品，权限，员工，物流，订单管理，结算及发票等）
 
@@ -60,6 +61,16 @@ npm start
 - Remember to copy create database, and configure connection in `server/conf/conf.js`
 - The `server.crt`, and `server.key` can be used for enabling https, the configuration is in
   `/build/webpack.dev.conf.js:43-45`
+
+### App screenshots
+![Login Page](/project/screenshots/1.png "Login Page")
+![Product added to cart](/project/screenshots/2.png "Product added to cart")
+![Cart](/project/screenshots/3.png "Cart")
+![Checkout / pay online](/project/screenshots/4-1.png "Checkout / pay online")
+![Checkout / add address](/project/screenshots/4-2.png "Checkout / add address")
+![Checkout / order success](/project/screenshots/5.png "Checkout / order success")
+![Order List](/project/screenshots/6.png "Order List")
+
 
 ### Collaborate?
 

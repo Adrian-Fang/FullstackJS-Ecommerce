@@ -1,10 +1,11 @@
 import http from './public';
 
 //User Authentication
+export const verifyEmail = (params) => http.fetchPost('/users/verifyUser', params);
 export const register = (params) => http.fetchPost('/users/register', params);
 export const login = (params) => http.fetchPost('/users/login', params);
 export const checkUserExist = (params) => http.fetchGet('/users/checkUserExist', params);
-export const authorisation = (params) => ahttp.fetchGet('/users/authorisation', params);
+export const authorisation = (params) => http.fetchGet('/users/authorisation', params);
 
 //User logout
 export const logout = (params) => http.fetchGet('/users/logout', params);

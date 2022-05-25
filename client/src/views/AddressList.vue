@@ -107,7 +107,7 @@ export default {
     getAddressList() {
       axios.get('/api/users/addressList').then((res) => {
         res = res.data;
-        if (res.status === '1') {
+        if (res.status == '1') {
           this.addressData = res.result;
           // console.log(res.result);
         } else {
@@ -130,7 +130,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             this.addressData.splice(index, 1);
             this.mdShow = false;
           }
@@ -156,7 +156,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             this.insertShow = false;
           }
         });
@@ -184,7 +184,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === '1') {
+          if (res.status == '1') {
             // console.log('设置成功');
           }
         });

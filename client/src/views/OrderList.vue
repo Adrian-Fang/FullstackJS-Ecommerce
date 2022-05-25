@@ -2,7 +2,6 @@
   <div>
     <NavBar />
     <Header />
-    <top-menu></top-menu>
     <div class="container">
       <div v-if="orderList.length">
         <v-card class="my-3 py-2"
@@ -20,10 +19,16 @@
                style="position:absolute; right: 8px;top: 10px;">
             <div>{{ formatMoney(order.subTotal + order.shipping + order.insurance + order.discount) }}</div>
             <div class="ml-4">
-              <button @click="payOrder(order)"
-                      v-show="order.paymentStatus == 1">现在付款</button>
-              <button @click="payOrder(order)"
-                      v-show="order.paymentStatus == 2">付余款</button>
+              <v-btn text
+                     class="primary"
+                     small
+                     @click="payOrder(order)"
+                     v-show="order.paymentStatus == 1">Pay Now</v-btn>
+              <v-btn text
+                     class="primary"
+                     small
+                     @click="payOrder(order)"
+                     v-show="order.paymentStatus == 2">Pay Now</v-btn>
               <v-chip small
                       color="green lighten-2"
                       dark
@@ -59,8 +64,7 @@
               <v-chip class="text-caption">To Deliver</v-chip>
             </v-col>
             <v-col sm="2">
-              <v-tooltip v-model="deleteOrderTip"
-                         top>
+              <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn icon
                          v-bind="attrs"
@@ -72,8 +76,7 @@
                 </template>
                 <span>Delete Order</span>
               </v-tooltip>
-              <v-tooltip v-model="invoiceTip"
-                         top>
+              <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn icon
                          v-bind="attrs"
@@ -103,14 +106,12 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import Header from "@/components/Header.vue";
-import TopMenu from "@/components/TopMenu.vue";
 import axios from "axios";
 const conf = require("../utils/conf");
 export default {
   components: {
     NavBar,
     Header,
-    "top-menu": TopMenu,
   },
   data() {
     return {
@@ -131,7 +132,7 @@ export default {
     getOrderData() {
       axios.get("/users/getOrderData").then((res) => {
         res = res.data;
-        if (res.status === "1") {
+        if (res.status == "1") {
           this.orderList = res.result;
         }
       });
@@ -147,7 +148,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === "1") {
+          if (res.status == "1") {
             this.orderList.splice(index, 1);
           }
         });
@@ -167,7 +168,7 @@ export default {
         })
         .then((res) => {
           res = res.data;
-          if (res.status === "1") {
+          if (res.status == "1") {
             setTimeout(() => {
               this.mdShow = false;
               this.$router.push({

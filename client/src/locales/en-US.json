@@ -1,0 +1,101 @@
+{
+  "message": "hello i18n !!",
+  "saveBtn":"Save",
+  "cancelBtn":"Cancel",
+  "closeBtn":"Close",
+  "home": {
+    "link1":"BRAND",
+    "link2":"BUYER",
+    "link3":"FEATURED",
+    "login":"Login",
+    "logout":"Logout",
+    "register":"Register"
+  },
+  "registration":{
+    "join": "Create One Mall account",
+    "name": "Your name",
+    "email":"Email address*",
+    "password":"Set a password*",
+    "notice":"Your password will be securely encrypted, so that no one can read it directly.",
+    "nextStep": "Next",
+    "createAccount":"Create your account"
+  },
+  "login":{
+    "loginWithEmail":"Login with Emal",
+    "email":"Email adress",
+    "password":"Password",
+    "rememberMe":"Remember me",
+    "forgotPassword":"Forgot password?",
+    "login":"Log in",
+    "reset":"Reset"
+  },
+  "accountValidation":{
+    "inputVeriCode":"Input the code",
+    "continue":"Continue",
+    "resendCode":"Resend the code"
+  },
+  "mall":{
+    "allResults":"All results",
+    "all":"All price",
+    "price":"Price",
+    "taxIncluded": "VAT included if applicable",
+    "sortBy":"Sort by",
+    "details":"Details",
+    "addToCart":"Add to cart",
+    "loadMore":"Load more",
+    "available":"Available",
+    "buyNow":"Buy Now",
+    "productDesc":"Description",
+    "productSpecs":"Specifications"
+  },
+  "cart": {
+    "loginRequired": "You have to login to continue add products to cart.",
+    "addedToCart": "Added to cart.",
+    "cartEmpty":"Your cart is empty.",
+    "selectAll":"Select all",
+    "selected":"Selected",
+    "cartAlertHeader":"Shopping Cart",
+    "keepIt":"Keep it",
+    "shipTo":"Ship to",
+    "orderSummary":"Order Summary",
+    "subTotal":"Sub-total",
+    "shippingFee":"Shipping Fee",
+    "applyCoupon":"Apply",
+    "discount":"Discount",
+    "total":"Total",
+    "item":"item",
+    "delete":"Delete",
+    "quantityShort":"Qy",
+    "viewCart":"View Cart",
+    "numberOfItems":"Items",
+    "goShopping":"Go Shopping",
+    "checkout":"Check Out",
+    "checkoutPage":"Check-out",
+    "shippingItems":"Shipping Items"
+  },
+  "address":{
+    "shipTo":"Full name",
+    "deliveryAddress":"Delivery Address",
+    "noAddressFound":"No address found",
+    "addNewAddress":"Add new address",
+    "phoneNumber":"Telephone number",
+    "adress":"Detail adress",
+    "postalCode":"Code postal",
+    "country":"Country/Region",
+    "province":"Province",
+    "city":"City",
+    "county":"County/Sub-district",
+    "makeDefault":"Make this address default"
+  },
+  "checkout":{
+    "paymentOptions":"Payment Options",
+    "addBankCard":"Add a debit or credit card",
+    "placeOrder":"Submit Order",
+    "orderSuccess":"Order Created Successfully",
+    "thanksForBuying":"Thanks for purchasing on ONE-MALL!",
+    "orderId":"Order ID",
+    "suceessMessage":"We're processing this order with all efforts, please wait for further notifications.",
+    "viewOrder":"View Order",
+    "continueShopping":"Continue Shopping"
+  }
+}

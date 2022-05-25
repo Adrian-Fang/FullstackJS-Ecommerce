@@ -1,8 +1,6 @@
-# editor
 .vscode
-server/.vscode/
-server/*.rest
+*.code-workspace
+.DS_Store
 
-# dependencies
-node_modules/
+node_modules
 package-lock.json

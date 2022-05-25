@@ -16,16 +16,18 @@ const getters = {
 const actions = {
   getCartList({ commit }) {
     return new Promise((resolve, reject) => {
+      // do something here;
       getCartList()
         .then((res) => {
           if (res.status == '1') {
             commit('INIT_CART', res.result);
+            resolve(res);
           } else {
             console.log('Not authorised,login might be required');
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.log('error occured getting cart list', err);
           reject(err);
         });
     });
@@ -35,16 +37,14 @@ const actions = {
     return new Promise((resolve, reject) => {
       addProductToCart(params)
         .then((res) => {
-          if (res.status === '1') {
-            //update cartList...
+          if (res.status == '1') {
             dispatch('getCartList');
-          } else {
-            console.log('Error occured during processing');
+            resolve();
           }
         })
         .catch((err) => {
-          console.log(err);
-          console.log('Server has returned an error...');
+          console.log('Server has returned an error...', err);
+          reject(err);
         });
     });
   },
@@ -53,14 +53,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       deleteCartItem(params)
         .then((res) => {
-          if (res.status === '1') {
+          if (res.status == '1') {
             dispatch('getCartList');
-            // defer the callback after next DOM update cycle.
-            // this.$nextTick(() => {
-            //     this.getCartData();
-            // });
+            resolve();
           } else {
             console.log('Error occured during removing from cart...');
+            reject();
           }
         })
         .catch((err) => {
@@ -91,6 +89,9 @@ const mutations = {
   CHECKOUT(state, selected) {
     state.checkoutList = state.cartList.filter((v, i) => selected.includes(v.productId.toString()));
   },
+  COMPLETE_CHECKOUT (state) {
+    state.checkoutList = []; //after successful checkout, this list should be cleared
+  }
 };
 
 export default {

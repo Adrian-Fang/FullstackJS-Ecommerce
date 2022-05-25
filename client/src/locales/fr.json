@@ -1,0 +1,101 @@
+{
+  "message": "Bonjour i18n !!",
+  "saveBtn":"Confirmer",
+  "cancelBtn":"Annuler",
+  "closeBtn":"Fermer",
+  "home": {
+    "link1":"DES MARQUES",
+    "link2":"POUR ACHETER",
+    "link3":"EN VEDETTE",
+    "login":"S'identifier",
+    "logout":"Se déconnecter",
+    "register":"S'inscrire"
+  },
+  "registration":{
+    "join": "créer un compte One Mall",
+    "name": "Votre nom",
+    "email":"Adresse e-mail",
+    "password":"Mot de passe",
+    "notice":"Votre mot de passe sera crypté, afin que personne ne puisse le lire directement..",
+    "nextStep": "Suivant",
+    "createAccount":"Créez votre compte"
+  },
+  "login":{
+    "loginWithEmail":"S'identifier avec adresse e-mail",
+    "email":"Adresse e-mail",
+    "password":"Mot de passe",
+    "rememberMe":"Rester connecté",
+    "forgotPassword":"Mot de passe oublié",
+    "login":"S'identifier",
+    "reset":"Reset"
+  },
+  "accountValidation":{
+    "inputVeriCode":"Saisir un code",
+    "continue":"Continuer",
+    "resendCode":"Renvoyer le code"
+  },
+  "mall":{
+    "allResults":"Tous les résultats",
+    "all":"Tout",
+    "price":"Prix",
+    "taxIncluded": "Taxe comprise",
+    "sortBy":"Trier par",
+    "details":"Détails",
+    "addToCart":"Ajouter au panier",
+    "loadMore":"Charger plus",
+    "available":"Disponible",
+    "buyNow":"Achetez maintenant",
+    "productDesc":"Description",
+    "productSpecs":"Spécifications"
+  },
+  "cart": {
+    "loginRequired": "Vous devez vous connecter pour continuer à ajouter des produits au panier.",
+    "addedToCart": "Ajouté au panier.",
+    "cartEmpty":"Votre panier est vide.",
+    "selectAll":"Sélectionnez tout",
+    "selected":"Sélectionné",
+    "cartAlertHeader":"Panier alerte",
+    "keepIt":"Gardez-le",
+    "shipTo":"Livrer à",
+    "orderSummary":"Résumé de commande",
+    "subTotal":"Sous-total",
+    "shippingFee":"Frais de livraison",
+    "applyCoupon":"Appliquer",
+    "discount":"Discount",
+    "total":"Total",
+    "item":"article",
+    "delete":"Supprimer",
+    "quantityShort":"Qté",
+    "viewCart":"Voir le Panier",
+    "numberOfItems":"Objets",
+    "goShopping":"Au marché",
+    "checkout":"Check Out",
+    "checkoutPage":"Check-out",
+    "shippingItems":"Articles à livrer"
+  },
+  "address":{
+    "shipTo":"Nom Complet",
+    "deliveryAddress":"Address de livraison",
+    "noAddressFound":"Aucune adresse trouvée",
+    "addNewAddress":"Ajouter une nouvelle",
+    "phoneNumber":"Numéro de téléphone",
+    "adress":"Adresse",
+    "postalCode":"Code postal",
+    "country":"Pays/région",
+    "province":"Province",
+    "city":"Ville",
+    "county":"Quartier",
+    "makeDefault":"Faire de cette adresse mon adresse par défaut"
+  },
+  "checkout":{
+    "paymentOptions":"Options de paiement",
+    "addBankCard":"Ajouter une carte de crédit ou de débit",
+    "placeOrder":"Passer la commande",
+    "orderSuccess":"Commande créée avec succès",
+    "thanksForBuying":"Merci pour votre commande sur ONE-MALL!",
+    "orderId":"Numero de la commande",
+    "suceessMessage":"Nous traitons cette commande avec tous les efforts possibles, veuillez attendre les prochaines notifications.",
+    "viewOrder":"Voir les commandes",
+    "continueShopping":"Continuer à acheter"
+  }
+}

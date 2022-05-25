@@ -16,7 +16,7 @@ const actions = {
       commit('SET_PRODUCT_STATUS', 'loading');
       getProducts(payload.params)
         .then((res) => {
-          if (res.status === '1') {
+          if (res.status == '1') {
             if (payload.loadMoreFlag) {
               //Loading more products...
               if (res.result.list.length > 0) {

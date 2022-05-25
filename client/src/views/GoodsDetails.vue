@@ -2,14 +2,16 @@
   <div>
     <NavBar />
     <Header />
-    <top-menu></top-menu>
     <div class="container">
-      <div class="store-content" v-for="item in goodsList" :key="item.id">
+      <div class="store-content"
+           v-for="item in goodsList"
+           :key="item.id">
         <v-card color="white">
           <div class="main-info">
             <div class="detail-gallery">
               <div class="main-pic lighten-1">
-                <img :src="`static/${pics[mainPicIndex].trim()}`" :alt="item.productName" />
+                <img :src="`static/${pics[mainPicIndex].trim()}`"
+                     :alt="item.productName" />
               </div>
               <div class="thumbnail">
                 <ul v-for="(img, index) in pics" :key="index">
@@ -24,16 +26,14 @@
             <div class="detail-right">
               <h4 class="pr-1">{{ item.productDetails }}</h4>
               <div class="text-right pr-4 pb-2">
-                <v-rating
-                  dense
-                  size="16"
-                  color="yellow darken-3"
-                  background-color="grey darken-1"
-                  empty-icon="$ratingFull"
-                  half-increments
-                  hover
-                  v-model="rating"
-                ></v-rating>
+                <v-rating dense
+                          size="16"
+                          color="yellow darken-3"
+                          background-color="grey darken-1"
+                          empty-icon="$ratingFull"
+                          half-increments
+                          hover
+                          v-model="rating"></v-rating>
               </div>
               <div class="price">
                 <div class="market text-decoration-line-through mb-1">¥ {{ marketPrice }}</div>
@@ -41,15 +41,15 @@
                   ¥ {{ item.productPrice }}
                   <v-chip label color="pink" text-color="white" class="font-weight-thin px-1">In 3 Days</v-chip>
                 </div>
-                <div class="comment font-italic">* VAT included if applicable</div>
+                <div class="comment font-italic">* {{$t('mall.taxIncluded')}}</div>
               </div>
               <div class="num mt-2">
-                <span class="params-name">数量</span>
+                <span class="params-name">{{$t('mall.available')}}</span>
                 <buy-num @edit-num="editNum" :limit="Number(item.limit_num)"></buy-num>
               </div>
               <div class="buy">
-                <v-btn @click="addCart(item)" class="primary option-button">加入购物车</v-btn>
-                <v-btn @click="checkout(product.productId)" disabled class="option-button ml-2">现在购买</v-btn>
+                <v-btn @click="addCart(item)" class="primary option-button">{{$t('mall.addToCart')}}</v-btn>
+                <v-btn @click="checkout(product.productId)" disabled class="option-button ml-2">{{$t('mall.buyNow')}}</v-btn>
               </div>
             </div>
           </div>
@@ -57,50 +57,57 @@
 
         <!--产品信息-->
         <v-card>
-          <v-tabs color="primary" slider-color="primary">
-            <v-tab>商品描述</v-tab>
-            <v-tab>产品参数</v-tab>
-            <v-tab-item v-for="n in 2" :key="n">
-              <v-container fluid>
-                {{ item.desc }}
-                <v-img :src="`static/details-img/${item.descImg}`" />
-              </v-container>
-            </v-tab-item>
+          <v-tabs color="primary"
+                  v-model="tab">
+            <v-tabs-slider color="primary"></v-tabs-slider>
+            <v-tab>{{$t('mall.productDesc')}}</v-tab>
+            <v-tab>{{$t('mall.productSpecs')}}</v-tab>
           </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item v-for="n in 2"
+                        :key="n">
+              <v-card flat
+                      min-height="500px"
+                      class="pa-3">
+                {{ item.desc }}
+                <v-img class="mx-auto"
+                       :src="`static/details-img/${item.descImg}`" />
+              </v-card>
+            </v-tab-item>
+          </v-tabs-items>
         </v-card>
       </div>
     </div>
     <v-snackbar v-model="snackbar">
       <span class="ml-4" v-html="snackText"></span>
-      <v-btn small text color="primary" @click.native="snackbar = false">Close</v-btn>
+      <v-btn small text color="primary" @click.native="snackbar = false">{{$t('closeBtn')}}</v-btn>
     </v-snackbar>
   </div>
 </template>
 <script>
-import NavBar from '@/components/NavBar.vue';
-import Header from '@/components/Header.vue';
-import TopMenu from '@/components/TopMenu.vue';
-import BuyNum from '../components/buynum';
-import axios from 'axios';
+import NavBar from "@/components/NavBar.vue";
+import BuyNum from "@/components/buynum.vue";
+import Header from "@/components/Header.vue";
+import axios from "axios";
 export default {
   components: {
     NavBar,
-    'top-menu': TopMenu,
     Header,
-    BuyNum,
+    BuyNum
   },
   data() {
     return {
+      tab: null,
       rating: 4.46,
       goodsList: [],
       product: {},
       mainPicIndex: 0,
       pics: [],
       marketPrice: 3000,
-      tabs: ['商品描述', '产品参数'],
+      tabs: ["商品描述", "产品参数"],
       cartQty: 1,
       snackbar: false,
-      snackText: '',
+      snackText: "",
       snackTimeOut: 2000,
     };
   },
@@ -119,13 +126,13 @@ export default {
 
       //TBD: move api call to @/api/goods modules
       axios
-        .get('/getDetails', {
+        .get("/getDetails", {
           params: param,
         })
         .then((res) => {
           res = res.data;
-          this.pics = res.result[0].productImg.split(',');
-          if (res.status === '1') {
+          this.pics = res.result[0].productImg.split(",");
+          if (res.status == "1") {
             this.goodsList = res.result;
           }
         });
@@ -134,23 +141,31 @@ export default {
       this.cartQty = qty;
     },
     addCart(item) {
-      let params = {
-        pId: item.productId,
-        pQty: this.cartQty,
-      };
-      this.$store.dispatch('addItemToCart', params);
-      this.snackbar = true;
-      this.snackText = `Item [<span class='primary--text'> ${item.productName}</span> ] Added to cart`;
+      if(this.$store.getters['isLoggedIn']) {
+        let params = {
+          pId: item.productId,
+          pQty: this.cartQty,
+        }; 
+        this.$store.dispatch("addItemToCart", params);
+        this.snackbar = true;
+        this.snackText = `[<span class='primary--text'> ${item.productName}</span> ] Added to cart`;
+      } else {
+        this.snackbar = true;
+        this.snackText = `${ this.$t('cart.loginRequired') }`;
+      }
+      
     },
     checkout(productId) {
-      axios.get('/users/checkLogin').then((res) => {
+      axios.get("/users/checkLogin").then((wres) => {
         res = res.data;
-        if (res.status === '1') {
+        if (res.status == "1") {
           this.$router.push({
-            path: '/checkout',
+            path: "/checkout",
             query: { productId, num: this.cartQty },
           });
-        } else if (res.status === '10001') {
+        } else if (res.status == "10001") {
+          //TODO: WTH is this code
+
         }
       });
     },

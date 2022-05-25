@@ -86,7 +86,6 @@ module.exports = {
                     });
                 }
             });
-            console.log('successful!');
         } else {
             console.log('an err occured when query product data, likely a db connection error.');
         }

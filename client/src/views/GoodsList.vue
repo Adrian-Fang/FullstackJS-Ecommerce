@@ -2,18 +2,20 @@
   <div>
     <NavBar />
     <Header />
-    <top-menu></top-menu>
     <div class="mall-container">
       <div class="filter-panel" :class="{ 'filterby-show': filterBy }">
-        <div class="search-filter">All Results</div>
+        <div class="search-filter">{{$t('mall.allResults')}}</div>
         <div class="filter-group">
           <!-- here is just one filter group, which is Price -->
-          <div class="filter-group-header">Price:</div>
+          <div class="filter-group-header">{{$t('mall.price')}}:</div>
           <div class="filter-group-items">
-            <a href :class="{ cur: clickflag === 'all' }" @click.stop="setClickAll">All</a>
+            <a href :class="{ cur: clickflag === 'all' }" @click.stop="setClickAll">{{$t('mall.all')}}</a>
           </div>
           <div class="filter-group-items" v-for="(price, index) in priceFilter" :key="index">
-            <a href :class="{ cur: clickflag === index ? true : false }" @click="setClickFlag(index)"
+            <a
+              href
+              :class="{ cur: clickflag === index ? true : false }"
+              @click="setClickFlag(index)"
               >{{ price.startPrice }}-{{ price.endPrice }}</a
             >
           </div>
@@ -21,7 +23,7 @@
       </div>
       <div class="product-main">
         <div class="filter-nav">
-          <span class="sortby">排序:</span>
+          <span class="sortby">{{$t('mall.sortBy')}}: </span>
         </div>
         <!-- searched results list -->
         <div class="product-list" v-if="checkGoodsLen">
@@ -35,41 +37,49 @@
             <div class="main">
               <div class="name">{{ item.productName }}</div>
               <div class="details">
-                <a href="javascript:;" :title="`${item.productDetails}`" @click="viewDetails(item)">{{
-                  item.productDetails
-                }}</a>
+                <a
+                  href="javascript:;"
+                  :title="`${item.productDetails}`"
+                  @click="viewDetails(item)"
+                  >{{ item.productDetails }}</a
+                >
               </div>
               <div class="price">{{ formatMoney(item.productPrice) }}</div>
               <div open-on-hover class="btn-area">
-                <v-btn class="px-2 my-1" tile @click="viewDetails(item)">Details</v-btn>
-                <v-btn class="px-2 my-1" tile color="primary lighten-1" dark @click="addCart(item)">Add Cart</v-btn>
+                <v-btn class="px-2 my-1" tile @click="viewDetails(item)">{{$t('mall.details')}}</v-btn>
+                <v-btn class="px-2 my-1" tile color="primary lighten-1" dark @click="addCart(item)"
+                  >{{$t('mall.addToCart')}}</v-btn
+                >
               </div>
             </div>
           </div>
           <div class="my-3">
-            <v-btn color="grey" dark="" @click="loadMore()">Load More</v-btn>
+            <v-btn color="grey" dark="" @click="loadMore()">{{$t('mall.loadMore')}}</v-btn>
           </div>
         </div>
-        <div v-if="!checkGoodsLen" width="100%" style="background:url(../../static/404.png) no-repeat center;"></div>
+        <div
+          v-if="!checkGoodsLen"
+          width="100%"
+          style="background:url(../../static/404.png) no-repeat center;"
+        ></div>
       </div>
     </div>
     <v-snackbar v-model="snackbar">
       <span class="ml-4" v-html="snackText"></span>
-      <v-btn small text color="primary" @click.native="snackbar = false">Close</v-btn>
+      <v-btn small text color="primary" @click.native="snackbar = false">{{$t('closeBtn')}}</v-btn>
     </v-snackbar>
   </div>
 </template>
+
 <script>
 import NavBar from '@/components/NavBar.vue';
 import Header from '@/components/Header.vue';
-import TopMenu from '@/components/TopMenu.vue';
 const conf = require('../utils/conf');
-import axios from 'axios';
+
 export default {
   components: {
     NavBar,
     Header,
-    'top-menu': TopMenu,
   },
   data() {
     return {
@@ -112,9 +122,6 @@ export default {
       snackTimeOut: 2000,
     };
   },
-  created() {
-    //empty for now
-  },
   mounted() {
     //Be Noted that, the params needed to be written in curly brackets for GET requests...
     this.$store.dispatch('requestProducts', { params: this.reqProductParams });
@@ -144,14 +151,21 @@ export default {
       });
     },
     addCart(item) {
+      //check login status first.
+      if(this.$store.getters['isLoggedIn']) {
       //default qty is 1 unit
-      var params = {
-        pId: item.productId,
-        pQty: 1,
-      };
-      this.$store.dispatch('addItemToCart', params);
-      this.snackbar = true;
-      this.snackText = `Item [<span class='primary--text'> ${item.productName}</span> ] Added to cart`;
+        var params = {
+          pId: item.productId,
+          pQty: 1,
+        };
+        this.$store.dispatch('addItemToCart', params);
+        this.$store.dispatch('getCartList');
+        this.snackbar = true;
+        this.snackText = `Item [<span class='primary--text'> ${item.productName}</span> ] Added to cart`;
+      } else {
+        this.snackbar = true;
+        this.snackText = `${ this.$t('cart.loginRequired') }`;
+      }
     },
     loadMore() {
       this.busy = true;

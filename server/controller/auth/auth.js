@@ -6,7 +6,7 @@ module.exports = {
     verifyEmailOrMobile: (req, res, next) => {
             const emailOrMobile = req.body.params.email;
             //generate OTP, Ref_Code(not used now), and email first
-            const {otp,ref_code, otp_email_body} = util.generateCodeAndEmail();
+            const {otp, ref_code, otp_email_body} = util.generateCodeAndEmail();
 
             if(emailOrMobile.includes('@')) {
                 //User registers with email
