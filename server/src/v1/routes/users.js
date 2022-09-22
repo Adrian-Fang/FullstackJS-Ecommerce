@@ -1,9 +1,10 @@
 var router = require('express').Router();
 
 //Controllers
-const UserController = require('../controller/user')
-const AuthController = require('../controller/auth/auth')
-const EmailController = require('../controller/v1/mailer')
+const UserController = require('../../controllers/user')
+const AuthController = require('../../controllers/auth')
+const EmailController = require('../../controllers/mailer')
+const DownloadController = require('../../controllers/downloader')
 
 //APIs: User
 router.route('/').get(EmailController.sendTestEmail, UserController.index)
@@ -30,6 +31,7 @@ router.route('/insertAdr').post(UserController.addAddress)
 //APIs: User Orders
 router.route('/submitOrder').post(UserController.createOrder)
 router.route('/getOrderData').get(UserController.getAllOrder)
+router.route('/downloadAllOrder').get(DownloadController.downloadAllOrder)
 router.route('/delOrder').get(UserController.deleteOrder)
 router.route('/updateOrder').get(UserController.updateOrder)
 

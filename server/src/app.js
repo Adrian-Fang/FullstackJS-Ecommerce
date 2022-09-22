@@ -6,31 +6,35 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const util = require('./utils/util');
+const Sentry = require('@sentry/node');
+const swaggerUi = require('swagger-ui-express');
 
-const indexRoute = require('./routes/index');
-const usersRoute = require('./routes/users');
+const swaggerDocument = require('./v1/docs/swagger');
+
+const productsRoute = require('./v1/routes/products');
+const usersRoute = require('./v1/routes/users');
 
 const app = express();
 
-// view engine setup
-app.set('view engine', 'pug');
+// Implement Sentry for error tracing, into production only
+if(process.env.NODE_ENV === 'production'){
+  Sentry.init({
+    dsn: "https://eb07dca034764e8480f734e7576b2d6d@o465476.ingest.sentry.io/6422420",
+    tracesSampleRate: 1.0,
+  });
+
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+}
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//WhiteList URLs no need for user Authorisation
-const whiteListUrl = {
-  get: ['/api/list', '/api/getDetails', '/api/users/logout', '/api/users/authorisation','/api/users/checkUserExist', '/api/search', '/robots.txt'],
-  post: ['/api/users/login', '/api/users/register', '/api/users/verifyUser'],
-};
-
-const hasOneOf = (str, arr) => {
-  return arr.some((item) => item.includes(str));
-};
 
 app.all('*', (req, res, next) => {
   // deal with access-control-allow-origin error
@@ -46,10 +50,11 @@ app.all('*', (req, res, next) => {
     // 拦截请求，验证 Token
     let method = req.method.toLowerCase();
     let requestPath = req.path;
-    if (whiteListUrl[method] && hasOneOf(requestPath, whiteListUrl[method])) {
+    if ($conf.whiteListUrl[method] && util.inWhiteList(requestPath, $conf.whiteListUrl[method])) {
       next();
     } else {
       const bearerAuth = req.headers['authorization'];
+      console.log()
       if (!bearerAuth) return res.status(401).send('Access denied, please login');
       else {
         const token = bearerAuth.split(' ')[1];
@@ -78,8 +83,14 @@ app.get('/', (req, res, next) => {
   next();
 });
 
-app.use('/api', indexRoute);
-app.use('/api/users', usersRoute);
+app.use('/api/v1/products', productsRoute);
+app.use('/api/v1/users', usersRoute);
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// The error handler must be before any other error middleware and after all controllers
+if(process.env.NODE_ENV === 'production'){
+  app.use(Sentry.Handlers.errorHandler());
+}
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -88,15 +99,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// error handler
-app.use((err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('Internal error;');
+//error hanlder for production
+app.use((error, req, res, next) => {
+  if(error) {
+    console.log(util.getCurrentDateTime(), '\n', error);
+    res.status(error?.status || 500).send({ status: '0', msg: 'An internal error encountered.'});
+  }
 });
+
 
 module.exports = app;

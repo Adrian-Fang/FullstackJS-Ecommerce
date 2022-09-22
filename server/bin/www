@@ -4,27 +4,15 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../src/app');
 var debug = require('debug')('server:server');
 var http = require('http');
-
-// Enabling https
-var https = require('https');
-var fs = require('fs');
-var path = require('path');
-// var privateKey = fs.readFileSync(path.join(__dirname, './certificate/private.pem'), 'utf8');
-// var certificate = fs.readFileSync(path.join(__dirname, './certificate/ca.cer'), 'utf8');
-var certOptions = {
-  key: fs.readFileSync(path.resolve('bin/server.key')),
-  cert: fs.readFileSync(path.resolve('bin/server.crt'))
-};
-
 
 /**
  * Get port from environment and store in Express.
  */
 
-var PORT = process.env.PORT || '3001';
+var PORT = process.env.PORT || '3000';
 var SSLPORT = process.env.SSLPORT || '443';
 app.set('port', PORT);
 
@@ -33,7 +21,6 @@ app.set('port', PORT);
  */
 
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(certOptions, app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -42,10 +29,6 @@ var httpsServer = https.createServer(certOptions, app);
 httpServer.listen(PORT);
 httpServer.on('error', onError);
 httpServer.on('listening', onListening);
-
-httpsServer.listen(SSLPORT, () => {
-  console.log('https server running on port:', SSLPORT);
-});
 
 /**
  * Event listener for HTTP server "error" event.
@@ -56,9 +39,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof PORT === 'string'
-    ? 'Pipe ' + PORT
-    : 'Port ' + PORT;
+  var bind = typeof PORT === 'string' ? 'Pipe ' + PORT : 'Port ' + PORT;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -82,8 +63,6 @@ function onError(error) {
 function onListening() {
   console.log('http server running on port: ', PORT);
   var addr = httpServer.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }

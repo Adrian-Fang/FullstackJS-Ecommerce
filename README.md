@@ -7,10 +7,13 @@
 ### 技术栈 | Technology Stack
 
 ```javascript
-vue-cli2 + vue2.5 + vue-router + vuex + axios
-vuetify + Material Design Icons
-node.js + express
-mysql
+Front-End:  vue-cli2 + vue2.5 + vue-router + vuex + axios
+UI:         vuetify + Material Design Icons
+Server:     node.js + express 
+DB:         mysql2 (Native, no ORM/Query Builder) 
+Test:       TODO
+Migration:  TODO
+Docs:       Swagger Docs
 ```
 
 ### 功能列表 | Features and Functions
@@ -50,16 +53,14 @@ npm run dev
 
 ### Todos
 
-- [ ] （Mall）Filter and Sorting...；
 - [ ] （数据库）商品分类及属性；
-- [ ]  (前端) Error interception & handling such as 500, 403, 401...
 - [ ] （前端）商城商品分类下拉菜单，商品 Filter
 - [ ] （前端）后台管理系统（商品，权限，员工，物流，订单管理，结算及发票等）
 
 ### Reminders
 
-- Remember to copy create database, and configure connection in `server/conf/conf.js`
-- The `server.crt`, and `server.key` can be used for enabling https, the configuration is in
+- Remember to copy create database, and configure connection in `server/src/conf.js`
+- The `server.crt`, and `server.key` can be used for enabling https, register a cert, and then change configurations in
   `/build/webpack.dev.conf.js:43-45`
 
 ### App screenshots

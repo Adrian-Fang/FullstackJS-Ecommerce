@@ -1,8 +1,8 @@
-const pool = require('../util/database').pool;
+const pool = require('../database/connection').pool;
 const $conf = require('../conf');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const utils = require('../util/util')
+const utils = require('../utils/util')
 
 const omise = require('omise')({
   secretKey: $conf.omiseSecretKey,
@@ -85,6 +85,7 @@ module.exports = {
             }
 
             //set data for user Profile
+            //TODO: TypeError Cannot read properties of undefined (reading 'userName')
             const userProfile = {};
             userProfile.userName = result[0].userName;
             userProfile.userId = result[0].userId;
@@ -116,7 +117,7 @@ module.exports = {
             let sql = `SELECT cartId,productId,productName,productPrice,qty,productImg,totalPrice,createdAt FROM cartlist WHERE userId='${userId}' AND checked=0 AND deleted=0 ORDER BY cartId DESC;`;
             pool.query(sql, (err, result) => {
             if (err) {
-                res.status(500).json({ status: '-1', msg: err.message, result: null});
+                next(err);
             } else {
                 res.status(200).json({
                     status: 1,
@@ -134,10 +135,10 @@ module.exports = {
         var pQty = parseInt(req.body.params.pQty);
         var userId = req.userId; //logged-in user's user id
         if (pool) {
-            var sql = `SELECT productName,productPrice,productImg FROM goods WHERE productId=${pId};`;
+            var sql = `SELECT productName,productPrice,productImg FROM products WHERE productId=${pId};`;
             pool.query(sql, (err, result) => {
             if (err) {
-                res.status(500).json({ status: '-1', msg: err.message, result: ''});
+                next(err);
             } else {
                 let pName = result[0].productName;
                 let pPrice = result[0].productPrice;
@@ -149,11 +150,7 @@ module.exports = {
                 let mSql = `SELECT * FROM cartlist WHERE productId=${pId} AND userId='${userId}' AND checked=0 AND deleted=0;`;
                 pool.query(mSql, (err, result) => {
                 if (err) {
-                    res.json({
-                    status: '-1',
-                    msg: err.message,
-                    result: '',
-                    });
+                   next(err);
                 } else {
                     if (result.length === 0) {
                     // current user does NOT have the product in Cart
@@ -208,9 +205,8 @@ module.exports = {
             let pId = req.body.params.pId;
             let sql = `UPDATE cartlist SET deleted=1, deletedAt=CURRENT_TIMESTAMP WHERE productId=${pId} and userId='${userId}'`;
             pool.query(sql, (err, result) => {
-                if (err) {
-                    res.status(500).json({ status: 0, msg: err.message});
-                } else { 
+                if (err) next(err) 
+                else { 
                     res.status(204).json({ status: 1, msg: 'Success', result: result});
                 }
             });
@@ -226,9 +222,8 @@ module.exports = {
         let sql = `update cartlist set productNum=${proNum},checked=${checked} where productId=${proId} and userId=${userId}`;
 
         pool.query(sql, (err, result) => {
-            if(err) {
-                res.status(500).json({ status: 0, msg: err. message, result: ''});
-            } else {
+            if(err) next(err)
+            else {
                 res.status(200).json({ status: 1, msg: 'Success', result: result})
             }
         });

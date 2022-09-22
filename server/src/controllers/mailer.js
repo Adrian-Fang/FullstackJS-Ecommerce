@@ -1,4 +1,4 @@
-const mailService = require('../../util/mailer')
+const mailService = require('../services/mailer')
 
 module.exports = {
     sendTestEmail: (req, res, next) => {
@@ -7,7 +7,7 @@ module.exports = {
             to: 'adrian.ffang@gmail.com', //could be a list of email addresses
             subject: 'Confirm your email address',
             text: 'Plain text body',
-            html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Mall-Vue-Express'
+            html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Node.js'
         };
         mailService.sendEmail(email);
         next();
