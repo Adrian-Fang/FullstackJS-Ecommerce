@@ -1,4 +1,4 @@
-import { getProducts } from '../../api/productsApi';
+import { getProducts } from '../../api/auth';
 
 const getters = {
   getProducts: (state) => state.productList,
@@ -11,20 +11,17 @@ const state = {
 };
 
 const actions = {
-  requestProducts({ commit, getters }, payload) {
+  requestProducts( { commit, getters }, payload ) {
     return new Promise((resolve, reject) => {
       commit('SET_PRODUCT_STATUS', 'loading');
       getProducts(payload.params)
         .then((res) => {
           if (res.status == '1') {
+            //Loading more products...
             if (payload.loadMoreFlag) {
-              //Loading more products...
-              if (res.result.list.length > 0) {
-                commit(
-                  'SET_PRODUCTS',
-                  getters.getProducts.concat(res.result.list)
-                );
-                commit('SET_PRODUCT_STATUS', 'success');
+              if (res.data.length > 0) {
+                commit( 'SET_PRODUCTS', getters.getProducts.concat(res.data) );
+                commit( 'SET_PRODUCT_STATUS', 'success' );
               } else {
                 //No More products..
                 console.log('All products loaded...');
@@ -32,15 +29,12 @@ const actions = {
               }
             } else {
               //Simply Loading products...
-              commit('SET_PRODUCTS', res.result.list);
+              commit('SET_PRODUCTS', res.data);
               commit('SET_PRODUCT_STATUS', 'success');
             }
           }
         })
-        .catch((err) => {
-          console.log(err);
-          reject(err);
-        });
+        .catch(err => reject(err));
     });
   },
 };

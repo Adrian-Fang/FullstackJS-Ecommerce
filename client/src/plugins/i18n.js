@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
+import { numberFormats } from '../locales/formats/numberFormats'
 
 Vue.use(VueI18n)
 
@@ -48,8 +49,9 @@ function checkDefaultLanguage() {
 
 export const languages = Object.getOwnPropertyNames(loadLocaleMessages())
 export default new VueI18n({
-  locale: checkDefaultLanguage () || process.env.VUE_APP_I18N_LOCALE || 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en', 
+  numberFormats,
+  locale: checkDefaultLanguage () || process.env.VUE_APP_I18N_LOCALE || 'en-US',
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en-US', 
   silentTranslationWarn: process.env.NODE_ENV === 'production',
   messages: loadLocaleMessages()
 })

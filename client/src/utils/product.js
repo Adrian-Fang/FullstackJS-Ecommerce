@@ -4,8 +4,12 @@ export function formatDate(dateStr) {
     return new Date(Date.parse(dateStr)).toLocaleString();
 }
 
-export function processImag(imgStr) {
+export function processImage(imgStr) {
     // In case of products 
-    return imgStr.split(",")[0];
+  if(imgStr) {
+    return `/static/${imgStr.split(',')[0]}`;
+  } else {
+    return '/static/default.png';
+  }
 }
 

@@ -4,55 +4,34 @@
     <Header />
     <div class="container">
       <div v-if="orderList.length">
-        <v-card class="my-3 py-2"
-                v-for="(order, index) in orderList"
-                :key="index">
-          <div class="ml-4"
-               text-color="#626262">
-            Order
+        <v-card class="my-3 py-2" v-for="(order, index) in orderList" :key="index">
+          <div class="ml-4" text-color="#626262">
+            {{ $t('myOrders.order') }}
             <a href="/"
                class="text-decoration-none"
                text-color="#626262">#{{ order.orderId }}</a>
-            <div class="text-caption #626262--text">Placed On {{ formatDate(order.createdAt) }}</div>
+            <div class="text-caption #626262--text">{{ $t('myOrders.orderDate') }} {{ formatDate(order.createdAt) }}</div>
           </div>
           <div class="d-flex align-center"
                style="position:absolute; right: 8px;top: 10px;">
-            <div>{{ formatMoney(order.subTotal + order.shipping + order.insurance + order.discount) }}</div>
+            <div>{{ $n((Number(order.subTotal) + Number(order.shipping) + Number(order.insurance) + Number(order.discount)), 'currency') }}</div>
             <div class="ml-4">
-              <v-btn text
-                     class="primary"
-                     small
-                     @click="payOrder(order)"
-                     v-show="order.paymentStatus == 1">Pay Now</v-btn>
-              <v-btn text
-                     class="primary"
-                     small
-                     @click="payOrder(order)"
-                     v-show="order.paymentStatus == 2">Pay Now</v-btn>
-              <v-chip small
-                      color="green lighten-2"
-                      dark
-                      v-show="order.paymentStatus === 3">Paid</v-chip>
+              <v-btn text class="primary" small @click="payOrder(order)" v-show="order.paymentStatus == 1 || order.paymentStatus == 2">{{ $t('myOrders.payNow') }}</v-btn>
+              <v-chip small color="green lighten-2" dark v-show="order.paymentStatus === 3">{{ $t('myOrders.paid') }}</v-chip>
             </div>
           </div>
           <v-divider></v-divider>
 
-          <v-row v-for="(p, index) in order.orderProducts"
-                 :key="index">
+          <v-row v-for="(p, index) in order.orderProducts" :key="index">
             <v-col sm="4">
               <div class="d-flex ml-4">
-                <img class="product-image"
-                     width="80px"
-                     v-lazy="processImg(p.productImg)"
-                     :alt="p.productName" />
-                <div class="py-1 ml-2">
-                  <p>{{ p.productName }}</p>
-                </div>
+                <img class="product-image" width="80px" v-lazy="processImage(p.productImg)" :alt="p.productName" />
+                <div class="py-1 ml-2"> <p>{{ p.productName }}</p></div>
               </div>
             </v-col>
             <v-col sm="2">
               <div class="font-weight-medium">
-                {{ formatMoney((p.productPrice + p.productDiscount) * p.productQty) }}
+                {{ $n((Number(p.productPrice) + Number(p.productDiscount)) * Number(p.productQty), 'currency') }}
               </div>
               <div class="font-weight-light">×{{ p.productQty }}</div>
             </v-col>
@@ -61,31 +40,24 @@
               <span>{{ order.contactPerson }}</span>
             </v-col>
             <v-col sm="2">
-              <v-chip class="text-caption">To Deliver</v-chip>
+              <v-chip class="text-caption"> {{ $t('myOrders.toDeliver') }}</v-chip>
             </v-col>
             <v-col sm="2">
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn icon
-                         v-bind="attrs"
-                         v-on="on"
-                         color="red lighten-2"
-                         @click="delOrderList(order)">
+                  <v-btn icon v-bind="attrs" v-on="on" color="red lighten-2" @click="deleteOneOrder(order)">
                     <v-icon>mdi-trash-can-outline</v-icon>
                   </v-btn>
                 </template>
-                <span>Delete Order</span>
+                <span>{{ $t('delete') }}</span>
               </v-tooltip>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn icon
-                         v-bind="attrs"
-                         v-on="on"
-                         color="blue lighten-2">
+                  <v-btn icon v-bind="attrs" v-on="on" color="blue lighten-2">
                     <v-icon>mdi-receipt</v-icon>
                   </v-btn>
                 </template>
-                <span>Check Invoice</span>
+                <span>{{ $t('myOrders.invoice') }}</span>
               </v-tooltip>
             </v-col>
           </v-row>
@@ -94,10 +66,10 @@
       <div class="text-center"
            v-if="!orderList.length">
         <div style="padding: 80px 0; font-size:16px; font-weight:500; color:#999;">
-          You haven't placed any order yet
+          {{ $t('myOrders.orderEmpty') }}
         </div>
         <v-btn color="primary px-2 mx-2"
-               @click="continueShopping">Shopping Now</v-btn>
+               @click="continueShopping">{{$t('cart.goShopping')}}</v-btn>
       </div>
     </div>
   </div>
@@ -106,8 +78,9 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import Header from "@/components/Header.vue";
-import axios from "axios";
-const conf = require("../utils/conf");
+import { getOrders,payOneOrder, deleteOrder } from '../api/auth';
+import { processImage } from '../utils/product';
+
 export default {
   components: {
     NavBar,
@@ -116,81 +89,46 @@ export default {
   data() {
     return {
       orderList: [],
-      totalPrice: "",
-      orId: "",
       deleteOrderTip: false,
       invoiceTip: false,
     };
   },
   mounted() {
-    this.getOrderData();
+    this.initOrderData()
   },
   methods: {
+    initOrderData() {
+      getOrders().then( res => {
+      if (res.status == "1") {
+        this.orderList = res.data;
+      }
+    })
+    },
     continueShopping() {
       this.$router.push({ path: "/mall" });
     },
-    getOrderData() {
-      axios.get("/users/getOrderData").then((res) => {
-        res = res.data;
-        if (res.status == "1") {
-          this.orderList = res.result;
+    deleteOneOrder(item) {
+      let index = this.orderList.indexOf(item);
+      deleteOrder({ orderId: item.orderId }).then( res => {
+        console.log('delete order res: ', res);
+        if(res.status == '1') {
+          this.orderList.splice(index, 1);
         }
-      });
-    },
-    delOrderList(item) {
-      var index = this.orderList.indexOf(item);
-      var param = {
-        orderId: item.orderId,
-      };
-      axios
-        .get("/users/delOrder", {
-          params: param,
-        })
-        .then((res) => {
-          res = res.data;
-          if (res.status == "1") {
-            this.orderList.splice(index, 1);
-          }
-        });
+      })
     },
     payOrder(item) {
-      this.mdShow = true;
-      this.totalPrice = item.totalPrice;
-      this.orId = item.orderId;
+      payOneOrder({ orderId: item.orderId }).then( res => {
+        if (res.status == "1") {
+          console.log('paid for this order..')
+          this.initOrderData();
+        }
+      })
     },
-    pay() {
-      var param = {
-        orderId: this.orId,
-      };
-      axios
-        .get("/users/updateOrder", {
-          params: param,
-        })
-        .then((res) => {
-          res = res.data;
-          if (res.status == "1") {
-            setTimeout(() => {
-              this.mdShow = false;
-              this.$router.push({
-                path: `/orderlist`,
-              });
-            }, 6000);
-          }
-        });
-    },
+
     formatDate(item) {
       return new Date(Date.parse(item)).toLocaleString();
     },
-    formatMoney: function (value) {
-      return new Intl.NumberFormat(conf.locale, {
-        style: "currency",
-        currency: conf.currency,
-      }).format(value);
-    },
-    processImg(img) {
-      //processing multiple images products
-      return `/static/${img.split(",")[0]}`;
-    },
+    processImage
   },
 };
 </script>

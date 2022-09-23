@@ -24,7 +24,9 @@
             </div>
             <!--右边-->
             <div class="detail-right">
-              <h4 class="pr-1">{{ item.productDetails }}</h4>
+              <h4>{{ item.productName }}</h4>
+              <h5 class="sub_title">{{ item.sub_title }}</h5>
+              <p class="desc">{{ item.productDetails }}</p>
               <div class="text-right pr-4 pb-2">
                 <v-rating dense
                           size="16"
@@ -36,9 +38,9 @@
                           v-model="rating"></v-rating>
               </div>
               <div class="price">
-                <div class="market text-decoration-line-through mb-1">¥ {{ marketPrice }}</div>
+                <div class="market text-decoration-line-through mb-1"> {{ $n(marketPrice, 'currency') }}</div>
                 <div class="promo">
-                  ¥ {{ item.productPrice }}
+                  {{ $n(item.productPrice, 'currency') }}
                   <v-chip label color="pink" text-color="white" class="font-weight-thin px-1">In 3 Days</v-chip>
                 </div>
                 <div class="comment font-italic">* {{$t('mall.taxIncluded')}}</div>
@@ -49,7 +51,7 @@
               </div>
               <div class="buy">
                 <v-btn @click="addCart(item)" class="primary option-button">{{$t('mall.addToCart')}}</v-btn>
-                <v-btn @click="checkout(product.productId)" disabled class="option-button ml-2">{{$t('mall.buyNow')}}</v-btn>
+                <v-btn @click="checkout(product.productId)" :disabled="!userLoggedin" class="option-button ml-2">{{$t('mall.buyNow')}}</v-btn>
               </div>
             </div>
           </div>
@@ -64,14 +66,10 @@
             <v-tab>{{$t('mall.productSpecs')}}</v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
-            <v-tab-item v-for="n in 2"
-                        :key="n">
-              <v-card flat
-                      min-height="500px"
-                      class="pa-3">
-                {{ item.desc }}
-                <v-img class="mx-auto"
-                       :src="`static/details-img/${item.descImg}`" />
+            <v-tab-item v-for="n in 2" :key="n">
+              <v-card flat  min-height="500px" class="pa-3">
+                {{ item.description }}
+                <v-img class="mx-auto" :src="`/static/details-img/${item.descImg}`" />
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -88,7 +86,8 @@
 import NavBar from "@/components/NavBar.vue";
 import BuyNum from "@/components/buynum.vue";
 import Header from "@/components/Header.vue";
-import axios from "axios";
+import { getProductDetail } from '../api/auth';
+
 export default {
   components: {
     NavBar,
@@ -113,30 +112,24 @@ export default {
   },
   computed: {
     // ...mapState(['login', 'showMoveImg', 'showCart'])
+    userLoggedin() {
+      return this.$store.getters['isLoggedIn'];
+    }
   },
   mounted() {
-    this.getdata();
+    getProductDetail(this.$route.params).then((res) => {
+      let itemImage = res.data[0]?.productImg || null;
+      if(itemImage) {
+        this.pics = res.data[0].productImg.split(",");
+      } else {
+        this.pics.push('default.png'); // there is this default picture for product items
+      }
+      if (res.status == "1") {
+          this.goodsList = res.data;
+      }
+    });
   },
   methods: {
-    getdata() {
-      var m = this.$route.query.m;
-      var param = {
-        productId: m,
-      };
-
-      //TBD: move api call to @/api/goods modules
-      axios
-        .get("/getDetails", {
-          params: param,
-        })
-        .then((res) => {
-          res = res.data;
-          this.pics = res.result[0].productImg.split(",");
-          if (res.status == "1") {
-            this.goodsList = res.result;
-          }
-        });
-    },
     editNum(qty) {
       this.cartQty = qty;
     },
@@ -156,18 +149,11 @@ export default {
       
     },
     checkout(productId) {
-      axios.get("/users/checkLogin").then((wres) => {
-        res = res.data;
-        if (res.status == "1") {
-          this.$router.push({
-            path: "/checkout",
-            query: { productId, num: this.cartQty },
-          });
-        } else if (res.status == "10001") {
-          //TODO: WTH is this code
-
-        }
-      });
+      if(this.userLoggedin){
+        this.$router.push({ path: "/checkout", query: { productId, num: this.cartQty } });
+      } else {
+        console.log("You're not logged in, sucker");
+      }
     },
   },
 };
@@ -239,7 +225,14 @@ export default {
       font-weight: 700;
       line-height: 1.25;
       color: #000;
-      margin-bottom: 13px;
+      margin-bottom: 10px;
+    }
+    .sub_title {
+      color:#d44d44;
+    }
+    .desc {
+      margin-top:5px;
+      font-size: 14px;
     }
     .sku-custom-title {
       overflow: hidden;

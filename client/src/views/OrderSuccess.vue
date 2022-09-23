@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     viewOrders() {
-      this.$router.push({ path: "/orderlist" });
+      this.$router.push({ path: "/orders" });
     },
     continueShopping() {
       this.$router.push({ path: "/mall" });
@@ -57,7 +57,7 @@ export default {
 <style lang="scss" scoped>
 .checkout-header {
   display: flex;
-  vertical-align:  flex-start;
+  align-items: flex-start;
   img {
     height: 36px;
   }

@@ -7,7 +7,7 @@
         <input
           type="text"
           :class="{show:show}"
-          v-model="Num >= limit ? limit : Num"
+          v-model="numOrLimit"
           @blur="blur()"
           maxlength="2"
         />
@@ -37,7 +37,11 @@ export default {
       default: 10,
     },
   },
-  computed: {},
+  computed: {
+      numOrLimit() {
+          return (this.num >= this.limit) ? this.limit : this.num
+      }
+  },
   data() {
     return {
       show: true,
@@ -138,12 +142,9 @@ export default {
     cursor: not-allowed !important;
   }
 }
-
-/*数量*/
 .item-cols-num {
   display: inline-block;
 }
-
 .select {
   height: 40px;
   padding-top: 4px;
@@ -160,7 +161,7 @@ export default {
   }
   .down,
   .up {
-    background: url(../../static/images/cart-updown_8303731e15@2x.jpg) no-repeat;
+    background: url(../../public/static/images/cart-updown_8303731e15@2x.jpg) no-repeat;
     overflow: hidden;
     float: left;
     width: 34px;
@@ -199,7 +200,6 @@ export default {
     }
   }
 }
-
 .down.down-disabled {
   background-position: 0 -300px;
   cursor: not-allowed;

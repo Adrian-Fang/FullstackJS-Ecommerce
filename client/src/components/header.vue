@@ -36,7 +36,7 @@
           <v-list dense two-line width="250px">
             <v-list-item v-for="item in cartItems" :key="item.key">
               <v-list-item-avatar>
-                <v-img :src="processImg(item.productImg)"></v-img>
+                <v-img :src="processImage(item.productImg)"></v-img>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title v-text="item.productName"></v-list-item-title>
@@ -58,7 +58,7 @@
         <v-card tile style="border-top:5px solid #F49A99" v-else width="250px">
           <v-card-title class="text-subtitle-1 pt-3 pb-1"> {{ cartLen }} {{$t('cart.numberOfItems')}}</v-card-title>
           <v-spacer></v-spacer>
-          <v-img class="mx-auto my-auto white" src="/static/icons/empty-cart.png"></v-img>
+          <v-img class="mx-auto my-auto white" src="/static/empty-cart.png"></v-img>
           <v-btn block tile color="primary lighten-2" @click="$router.push('/mall')"
             >{{$t('cart.goShopping')}}</v-btn
           >
@@ -71,9 +71,7 @@
 </template>
 
 <script>
-
-import { formatMoney } from "../utils/locale";
-
+import { processImage } from '../utils/product';
 export default {
   name: 'Header',
   data() {
@@ -120,46 +118,12 @@ export default {
     },
   },
   methods: {
+    processImage,
     goto(link) {
       this.$router.push(link);
     },
-    processImg(img) {
-      //processing multiple images products
-      return `/static/${img.split(',')[0]}`;
-    },
     processCartDisplay(item) {
-      return (
-        '<strong>' +
-        item.qty +
-        ' × </strong>' +
-        '<strong>' +
-        formatMoney(item.productPrice) +
-        '</strong>'
-      );
-    },
-    search() {
-      if (!this.searchKeyword) return;
-      var param = {
-        keyword: this.searchKeyword,
-        page: this.page,
-        pageSize: this.pageSize,
-        sort: 1,
-      };
-      axios
-        .get('/search', {
-          params: param,
-        })
-        .then((res) => {
-          res = res.data;
-          if (res.status == '1') {
-            if (!res.result.length) {
-              // this.$store.commit('checkGoodLen', false);
-            } else {
-              // this.$store.commit('updateGoodslist', res.result);
-              // this.$store.commit('checkGoodLen', true);
-            }
-          }
-        });
+      return ( '<strong>' + item.qty + ' × </strong>' + '<strong>' + this.$n(item.productPrice, 'currency') + '</strong>' );
     },
   },
 };

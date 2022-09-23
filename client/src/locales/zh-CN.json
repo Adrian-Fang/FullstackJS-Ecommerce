@@ -3,13 +3,18 @@
   "saveBtn":"保存",
   "cancelBtn":"取消",
   "closeBtn":"关闭",
+  "delete": "删除",
   "home": {
     "link1":"品牌",
     "link2":"买家",
     "link3":"精选",
     "login":"登入",
     "logout":"退出",
-    "register":"注册"
+    "register":"注册",
+    "profile": "账号管理",
+    "myAddress": "我的地址",
+    "myOrders": "订单管理",
+    "myCoupons": "优惠券"
   },
   "registration":{
     "join": "注册One Mall账号",
@@ -97,5 +102,17 @@
     "suceessMessage":"我们正在全力处理本订单，请耐心等待稍后通知。",
     "viewOrder":"查看订单",
     "continueShopping":"继续购物"
+  },
+  "myOrders": {
+    "orderEmpty": "订单历史空空如也",
+    "order": "订单",
+    "orderDate": "订单时间",
+    "paid":"已付款",
+    "payNow": "付款",
+    "invoice": "查看发票",
+    "toProcess": "待处理",
+    "toDeliver": "待送达",
+    "delivered": "已送达",
+    "complete": "已完成"
   }
 }

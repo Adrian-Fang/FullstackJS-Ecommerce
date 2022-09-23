@@ -63,42 +63,32 @@ const actions = {
   },
   register(context, params) {
     return new Promise((resolve, reject) => {
-      authApi.register(params)
-        .then(res => resolve(res))
-        .catch(err => reject(err));
+      authApi.register(params).then(res => resolve(res)).catch(err => reject(err));
     });
   },
   getAddress(context, params) {
     return new Promise((resolve, reject) => {
-      authApi
-        .getAddress(params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      authApi.getAddress(params).then( res => resolve(res)).catch((err) => { reject(err) });
     });
   },
   addNewAddress(context, params) {
     return new Promise((resolve, reject) => {
-      authApi.addAddress(params)
-        .then(res => resolve(res))
-        .catch(err => reject(err));
+      authApi.addAddress(params).then( res => resolve(res)).catch(err => reject(err));
     });
   },
   setDefaultAddress(context, params) {
     return new Promise((resolve, reject) => {
-      authApi.setDefaultAddress(params)
-        .then(res => resolve(res))
-        .catch(err => reject(err));
+      authApi.setDefaultAddress(params).then( res => resolve(res)).catch(err => reject(err));
+    });
+  },
+  deleteAddress(context, params) {
+    return new Promise((resolve, reject) => {
+      authApi.deleteAddress(params).then( res => resolve(res)).catch(err => reject(err));
     });
   },
   submitOrder(context, params) {
     return new Promise((resolve, reject) => {
-      authApi.submitOrder(params)
-        .then(res => resolve(res))
-        .catch(err => reject(err));
+      authApi.submitOrder(params).then(res => resolve(res)).catch(err => reject(err));
     });
   },
   // not too much user data, already got from login

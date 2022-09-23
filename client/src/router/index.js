@@ -9,8 +9,6 @@ import Cart from '@/views/Cart';
 import Checkout from '@/views/Checkout';
 import OrderSuccess from '@/views/OrderSuccess';
 import OrderList from '@/views/OrderList.vue';
-import Address from '@/views/Address';
-import AddressList from '@/views/AddressList';
 
 Vue.use(Router);
 
@@ -35,7 +33,7 @@ export default new Router({
       component: Login,
     },
     {
-      path: '/goodsdetails',
+      path: '/items/:productId',
       component: GoodsDetails,
     },
     {
@@ -48,22 +46,12 @@ export default new Router({
       component: Checkout,
     },
     {
-      path: '/address',
-      name: 'Address',
-      component: Address,
-    },
-    {
-      path: '/addresslist',
-      name: 'AddressList',
-      component: AddressList,
-    },
-    {
       path: '/complete',
       name: 'OrderSuccess',
       component: OrderSuccess,
     },
     {
-      path: '/orderlist',
+      path: '/orders',
       name: 'OrderList',
       component: OrderList,
     },

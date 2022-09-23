@@ -34,12 +34,12 @@
           </template>
           <v-list dense>
             <v-list-item-group v-model="userOptions">
-              <v-list-item v-for="(option, i) in userOptions" :key="i">
-                <v-list-item-icon class="mr-4">
+              <v-list-item v-for="(option, i) in userOptions" :key="i" @click="goTo(option.link)">
+                 <v-list-item-icon class="mr-4">
                   <v-icon v-text="option.icon"></v-icon>
                 </v-list-item-icon>
                 <v-list-item-content class="mr-2">
-                  <v-list-item-title>{{ option.title }}</v-list-item-title>
+                  <v-list-item-title>{{ $t(option.title) }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -80,27 +80,26 @@ export default {
         {
           icon: 'mdi-account-heart-outline',
           link: '/user/information',
-          title: 'Manage Profile',
+          title: 'home.profile',
         },
         {
           icon: 'mdi-dolly',
           link: '/addresslist',
-          title: 'My Addresses',
+          title: 'home.myAddress'
         },
         {
           icon: 'mdi-basket-outline',
-          link: '/orderlist',
-          title: 'My Orders',
+          link: '/orders',
+          title: 'home.myOrders',
         },
         {
           icon: 'mdi-ticket-percent-outline',
           link: '/user/coupon',
-          title: 'My Coupons',
+          title: 'home.myCoupons',
         },
       ],
     };
   },
-
   computed: {
     lang: {
       get: function() {
@@ -124,6 +123,9 @@ export default {
         this.$router.push({ path: '/login' });
       });
     },
+    goTo(path) {
+      this.$route.path == path? this.$router.go() : this.$router.push(path);
+    }
   },
 };
 </script>

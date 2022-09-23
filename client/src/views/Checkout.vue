@@ -1,3 +1,5 @@
+<!-- eslint-disable no-undef -->
+<!-- eslint-disable no-unused-vars -->
 <template>
   <div class="container" background-color="#f4f4f4">
     <div class="checkout-header py-2">
@@ -95,9 +97,9 @@
               <span class="font-weight-medium">{{ item.productName }}</span>
             </div>
             <div class="price mt-2">
-              <span class="font-weight-medium">{{ formatMoney(item.productPrice) }}</span>
+              <span class="font-weight-medium">{{ $n(item.productPrice, 'currency') }}</span>
               <br />
-              <span class="market text-decoration-line-through">{{ formatMoney(3000) }}</span>
+              <span class="market text-decoration-line-through">{{ $n(3000, 'currency') }}</span>
             </div>
             <v-spacer></v-spacer>
             <div class="quantity mt-2">
@@ -113,22 +115,22 @@
         <div class="cost-item">
           <div class="ml-1">{{$t('cart.subTotal')}}</div>
           <v-spacer></v-spacer>
-          <div class="mr-1">{{ formatMoney(checkSubTotal) }}</div>
+          <div class="mr-1">{{ $n(checkSubTotal, 'currency') }}</div>
         </div>
         <div class="cost-item">
           <div class="ml-1">{{$t('cart.shippingFee')}}</div>
           <v-spacer></v-spacer>
-          <div class="mr-1">{{ formatMoney(shipping) }}</div>
+          <div class="mr-1">{{ $n(shipping,'currency') }}</div>
         </div>
         <div class="cost-item discount" v-if="discount != 0">
           <div class="ml-1">{{$t('cart.discount')}}</div>
           <v-spacer></v-spacer>
-          <div class="mr-1">{{ formatMoney(discount) }}</div>
+          <div class="mr-1">{{ $n(discount, 'currency') }}</div>
         </div>
         <div class="cost-item">
-          <div class="ml-1 font-weight-bold">{{$t('cart.total')}}</div>
+          <div class="ml-1 font-weight-bold">{{ $t('cart.total') }}</div>
           <v-spacer></v-spacer>
-          <div class="mr-1 font-weight-bold">{{ formatMoney(checkTotalAmount) }}</div>
+          <div class="mr-1 font-weight-bold">{{ $n(checkTotalAmount, 'currency') }}</div>
         </div>
         <v-btn block class="mt-3" color="primary" :disabled="!isOrderComplete" @click="submitOrder"
           >{{$t('checkout.placeOrder')}}</v-btn
@@ -235,8 +237,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-const conf = require('../utils/conf');
 export default {
   data() {
     return {
@@ -317,7 +317,7 @@ export default {
     },
     checkSubTotal() {
       let amount = 0;
-      this.checkoutItems.forEach((v, i) => {
+      this.checkoutItems.forEach((v) => {
         amount += v.productPrice * v.qty;
       });
       return amount;
@@ -332,6 +332,7 @@ export default {
   methods: {
     handleOmiseFormSubmit() {
       alert('you can use {Card No.: 4242424242424242} for testing');
+      let OmiseCard;
       //OmiseCard.configure() must be called before OmiseCard.open(), otherwise the form won't open;
       OmiseCard.configure({
         publicKey: this.omiseConfig.publicKey,
@@ -345,7 +346,7 @@ export default {
       // });
       // OmiseCard.attach();
 
-      var form = document.querySelector('#checkoutForm');
+      // var form = document.querySelector('#checkoutForm');
       OmiseCard.open({
         //You can also do the configure here, such as
         //currency: "CNY",
@@ -366,7 +367,7 @@ export default {
       this.$store.dispatch('getAddress').then((res) => {
         if (res.status == '1') {
           // Be aware you cannot use = sign to do array value copy;
-          this.addressData = Array.from(res.result);
+          this.addressData = Array.from(res.data);
         } else {
           this.selected = null;
         }
@@ -380,8 +381,8 @@ export default {
         }
       });
     },
-    setAddressDefault(item) {
-      this.addressData.forEach((list, index) => {
+    setAddressDefault(item) { //TODO: Not used yet
+      this.addressData.forEach((list) => {
         if (item == list.addressId) {
           list.isDefault = 1;
         } else {
@@ -392,33 +393,25 @@ export default {
         addressId: item,
       };
       this.$store.dispatch('setDefaultAddress', params).then((res) => {
-        res = res.data;
         if (res.status == '1') {
+          this.getAddressList();
         }
       });
     },
     deleteAddress() {
-      var index = this.addressData.indexOf(this.delAdr);
-      var param = {
-        addressId: this.delAdr.addressId,
-      };
-      axios
-        .get('/users/delAdr', {
-          params: param,
-        })
-        .then((res) => {
-          res = res.data;
-          if (res.status == '1') {
-            this.addressData.splice(index, 1);
-            this.mdShow = false;
-          }
-        });
+      let index = this.addressData.indexOf(this.delAdr);
+      const param = { addressId: this.delAdr.addressId };
+      this.$store.dispatch('setDefaultAddress', param ).then( res => {
+        if(res.status == '1') {
+          this.addressData.splice(index, 1);
+        }
+      });
     },
     submitOrder() {
       this.placeOrderClicked = true;
       //Step1: update table `cartlist`: set the checked-out products as checked=1;
       let checkedCartItemsId = [];
-      this.$store.getters['checkedItems'].forEach((v, i) => checkedCartItemsId.push(v.cartId));
+      this.$store.getters['checkedItems'].forEach((v) => checkedCartItemsId.push(v.cartId));
       //Step2: update `OMS_orders`;
       let params = {
         checkedCartItemsId: checkedCartItemsId,
@@ -450,12 +443,6 @@ export default {
           console.log(err);
         });
     },
-    formatMoney: function(value) {
-      return new Intl.NumberFormat(conf.locale, {
-        style: 'currency',
-        currency: conf.currency,
-      }).format(value);
-    },
     formatAddress: (item) => {
       let name = item.lastName.toUpperCase() + ' ' + item.firstName;
       let contactNumber = item.contactNumber;
@@ -471,7 +458,7 @@ export default {
         item.county;
       let postalCode = item.postalCode;
       let isDefault = item.isDefault;
-      return { name, contactNumber, fullAddress, postalCode };
+      return { name, contactNumber, fullAddress, postalCode, isDefault };
     },
     processImg(img) {
       //processing multiple images products

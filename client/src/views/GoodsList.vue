@@ -3,57 +3,26 @@
     <NavBar />
     <Header />
     <div class="mall-container">
-      <div class="filter-panel" :class="{ 'filterby-show': filterBy }">
-        <div class="search-filter">{{$t('mall.allResults')}}</div>
-        <div class="filter-group">
-          <!-- here is just one filter group, which is Price -->
-          <div class="filter-group-header">{{$t('mall.price')}}:</div>
-          <div class="filter-group-items">
-            <a href :class="{ cur: clickflag === 'all' }" @click.stop="setClickAll">{{$t('mall.all')}}</a>
-          </div>
-          <div class="filter-group-items" v-for="(price, index) in priceFilter" :key="index">
-            <a
-              href
-              :class="{ cur: clickflag === index ? true : false }"
-              @click="setClickFlag(index)"
-              >{{ price.startPrice }}-{{ price.endPrice }}</a
-            >
-          </div>
-        </div>
-      </div>
       <div class="product-main">
-        <div class="filter-nav">
-          <span class="sortby">{{$t('mall.sortBy')}}: </span>
-        </div>
         <!-- searched results list -->
         <div class="product-list" v-if="checkGoodsLen">
           <div class="product-card" v-for="item in goodsList" :key="item.id">
-            <div class="pic">
-              <a href="#">
-                <img v-lazy="processImg(item.productImg)" />
-              </a>
-              <!--v-lazy图片懒加载-->
-            </div>
+            <div class="pic"><a href="#"><img v-lazy="processImage(item.productImg)"/></a></div>
             <div class="main">
               <div class="name">{{ item.productName }}</div>
               <div class="details">
-                <a
-                  href="javascript:;"
-                  :title="`${item.productDetails}`"
-                  @click="viewDetails(item)"
-                  >{{ item.productDetails }}</a
-                >
+                <a  href="javascript:;" :title="`${item.productDetails}`" @click="viewDetails(item)">
+                  {{ item.productDetails }}
+                </a>
               </div>
-              <div class="price">{{ formatMoney(item.productPrice) }}</div>
+              <div class="price">{{ $n(item.productPrice, 'currency') }}</div>
               <div open-on-hover class="btn-area">
                 <v-btn class="px-2 my-1" tile @click="viewDetails(item)">{{$t('mall.details')}}</v-btn>
-                <v-btn class="px-2 my-1" tile color="primary lighten-1" dark @click="addCart(item)"
-                  >{{$t('mall.addToCart')}}</v-btn
-                >
+                <v-btn class="px-2 my-1" tile color="primary lighten-1" dark @click="addCart(item)">{{$t('mall.addToCart')}}</v-btn>
               </div>
             </div>
           </div>
-          <div class="my-3">
+          <div class="my-3 mx-auto ">
             <v-btn color="grey" dark="" @click="loadMore()">{{$t('mall.loadMore')}}</v-btn>
           </div>
         </div>
@@ -74,7 +43,7 @@
 <script>
 import NavBar from '@/components/NavBar.vue';
 import Header from '@/components/Header.vue';
-const conf = require('../utils/conf');
+import { processImage } from '../utils/product';
 
 export default {
   components: {
@@ -83,39 +52,11 @@ export default {
   },
   data() {
     return {
-      // goodsList:[],
-      priceFilter: [
-        {
-          startPrice: 0,
-          endPrice: 500,
-        },
-        {
-          startPrice: 500,
-          endPrice: 1000,
-        },
-        {
-          startPrice: 1000,
-          endPrice: 2000,
-        },
-        {
-          startPrice: 2000,
-          endPrice: 5000,
-        },
-        {
-          startPrice: 5000,
-          endPrice: 10000,
-        },
-      ],
-      filterBy: false,
-      overLayFlag: false,
       sortFlag: '',
-      clickflag: 'all',
       busy: false,
-      isDefault: true,
       reqProductParams: {
-        page: 1,
+        pageNum: 1,
         pageSize: 8,
-        priceLevel: this.clickflag,
       },
       snackbar: false,
       snackText: '',
@@ -123,7 +64,6 @@ export default {
     };
   },
   mounted() {
-    //Be Noted that, the params needed to be written in curly brackets for GET requests...
     this.$store.dispatch('requestProducts', { params: this.reqProductParams });
   },
 
@@ -136,6 +76,7 @@ export default {
     },
   },
   methods: {
+    processImage,
     defineSort() {
       let sort = '';
       if (this.sortFlag === true) {
@@ -146,9 +87,7 @@ export default {
       return sort;
     },
     viewDetails(item) {
-      this.$router.push({
-        path: `/goodsdetails?m=${item.productId}`,
-      });
+      this.$router.push({ path: `/items/${item.productId}` });
     },
     addCart(item) {
       //check login status first.
@@ -169,21 +108,11 @@ export default {
     },
     loadMore() {
       this.busy = true;
-      this.params.page++;
+      this.reqProductParams.pageNum += 1;
       this.$store.dispatch('requestProducts', {
-        params: this.params,
+        params: this.reqProductParams,
         loadMoreFlag: true,
       });
-    },
-    formatMoney: function(value) {
-      return new Intl.NumberFormat(conf.locale, {
-        style: 'currency',
-        currency: conf.currency,
-      }).format(value);
-    },
-    processImg(img) {
-      //processing multiple images products
-      return `/static/${img.split(',')[0]}`;
     },
   },
 };
@@ -192,6 +121,7 @@ export default {
 .mall-container {
   display: flex;
   font-family: 'moderat', sans-serif;
+  padding: 50px 50px
 }
 
 .filter-panel {

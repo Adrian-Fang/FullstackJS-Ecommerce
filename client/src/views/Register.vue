@@ -168,8 +168,8 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue';
-import Header from '@/components/Header.vue';
+import NavBar from '../components/NavBar.vue';
+import Header from '../components/Header.vue';
 const authApi = require('../api/auth'); // not using vuex for email/mobile verification
 
 export default {
@@ -182,8 +182,8 @@ export default {
       regFormRules: {
         // title: [(v) => !!v || 'Please select a title'],
         // name: [(v) => !!v || 'Name is required'],
-        email: [(v) => !!v || 'Email is required', (v) => /.+@.+/.test(v) || 'Seems like unvalid email address'],
-        password: [(v) => !!v || 'Password is required', (v) => v.length >= 6 || 'Please input valid password'],
+        email: [ (v) => !!v || 'Email is required', (v) => /.+@.+/.test(v) || 'Seems like unvalid email address'],
+        password: [(v) => !!v || 'Password is required',(v) => v.length >= 6 || 'Please input valid password'],
         otp: [(v) => !!v || 'Verification code is required',(v) => v == this.otp || 'Code incorrect.']
       },
       showPassword: false,
@@ -242,7 +242,7 @@ export default {
         } else {
           console.log('An error occured processing user account verification.')
         }
-      };
+      }
     },
     async handleRegister() {
       this.$store.dispatch('register', this.regForm).then((res) => {
@@ -260,6 +260,7 @@ export default {
       });
     },
     handleGoogle() {
+      let grecaptcha;
       let response = grecaptcha.getResponse();
       const secret = {
         local: '6Lfe1sAZAAAAAO40D4SEzP-CGB1EVXrRQw2GE-18',

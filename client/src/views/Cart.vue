@@ -6,7 +6,7 @@
       <div class="empty-cart" v-if="cartList.length == 0">
         <div class="content">
           <p class="font-weight-light mt-5 mb-5">{{$t('cart.cartEmpty')}}</p>
-          <v-img contain src="static/icons/empty-cart.png" width="400px" class="mx-auto" />
+          <v-img contain src="static/empty-cart.png" width="400px" class="mx-auto" />
           <v-btn class="my-5" color="primary lighten-2" @click="$router.push('/mall')"
             >{{$t('cart.goShopping')}}</v-btn
           >
@@ -33,17 +33,15 @@
             <div class="cart-item pl-2" v-for="item in cartList" :key="item.productId">
               <v-checkbox v-model="selectedList" :value="`${item.productId}`"></v-checkbox>
               <div class="thumbnail mt-1">
-                <img :src="processImg(item.productImg)" />
+                <img :src="processImage(item.productImg)" />
               </div>
               <div class="desc mt-2 ml-3">
                 <span class="font-weight-medium">{{ item.productName }}</span>
               </div>
               <div class="price mt-2">
-                <span class="font-weight-medium primary--text">{{
-                  formatMoney(item.productPrice)
-                }}</span>
+                <span class="font-weight-medium primary--text">{{ $n(item.productPrice, 'currency')}}</span>
                 <br />
-                <span class="market text-decoration-line-through">{{ formatMoney(3000) }}</span>
+                <span class="market text-decoration-line-through">{{ $n(3000, 'currency') }}</span>
               </div>
               <v-spacer></v-spacer>
               <div class="quantity mt-2">
@@ -87,12 +85,12 @@
           <div class="cost-item">
             <div class="ml-1">{{$t('cart.subTotal')}}</div>
             <v-spacer></v-spacer>
-            <div class="mr-1">{{ formatMoney(calcSubTotal) }}</div>
+            <div class="mr-1">{{ $n(calcSubTotal, 'currency') }}</div>
           </div>
           <div class="cost-item">
             <div class="ml-1">{{$t('cart.shippingFee')}}</div>
             <v-spacer></v-spacer>
-            <div class="mr-1">{{ formatMoney(shipping) }}</div>
+            <div class="mr-1">{{ $n(shipping, 'currency') }}</div>
           </div>
           <div class="promo-code my-2">
             <input v-model="promoCode" placeholder="Enter Promo Code" />
@@ -101,7 +99,7 @@
           <div class="cost-item">
             <div class="ml-1 font-weight-bold">{{$t('cart.total')}}</div>
             <v-spacer></v-spacer>
-            <div class="mr-1 font-weight-bold">{{ formatMoney(calcTotal) }}</div>
+            <div class="mr-1 font-weight-bold">{{ $n(calcTotal, 'currency') }}</div>
           </div>
           <v-btn class="mt-3" block color="primary" :disabled="!selectedCount" @click="checkOut"
             >{{$t('cart.checkout')}}</v-btn
@@ -119,7 +117,8 @@
 <script>
 import NavBar from '@/components/NavBar.vue';
 import Header from '@/components/Header.vue';
-const conf = require('../utils/conf');
+import { processImage } from '../utils/product';
+
 export default {
   components: {
     'nav-bar': NavBar,
@@ -163,7 +162,7 @@ export default {
     calcSubTotal() {
       let subTotal = 0;
       var _this = this;
-      this.cartList.forEach((item, index) => {
+      this.cartList.forEach((item) => {
         if (_this.selectedList.includes(item.productId.toString())) {
           subTotal += item.productPrice * item.qty;
         }
@@ -171,11 +170,11 @@ export default {
       return subTotal;
     },
     calcTotal() {
-      this.total = this.calcSubTotal + this.shipping;
-      return this.total;
+      return this.calcSubTotal + this.shipping;
     },
   },
   methods: {
+    processImage,
     editQty(item, flag) {
       if (item.qty + flag > 0) {
         let params = {
@@ -214,21 +213,10 @@ export default {
         this.selectedList.splice(0, this.selectedList.length);
       } else {
         this.selectedList.splice(0, this.selectedList.length);
-        this.cartList.forEach((v, i) => {
+        this.cartList.forEach((v) => {
           this.selectedList.push(v.productId.toString());
         });
       }
-      console.log(this.selectedList);
-    },
-    processImg(img) {
-      //processing multiple images products
-      return `/static/${img.split(',')[0]}`;
-    },
-    formatMoney: function(value) {
-      return new Intl.NumberFormat(conf.locale, {
-        style: 'currency',
-        currency: conf.currency,
-      }).format(value);
     },
   },
 };

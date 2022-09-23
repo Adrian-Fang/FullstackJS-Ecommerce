@@ -3,13 +3,18 @@
   "saveBtn":"Confirmer",
   "cancelBtn":"Annuler",
   "closeBtn":"Fermer",
+  "delete": "Supprimer",
   "home": {
     "link1":"DES MARQUES",
     "link2":"POUR ACHETER",
     "link3":"EN VEDETTE",
     "login":"S'identifier",
     "logout":"Se déconnecter",
-    "register":"S'inscrire"
+    "register":"S'inscrire",
+    "profile": "Mes Profils",
+    "myAddress": "Mes adresses",
+    "myOrders": "Mes commandes",
+    "myCoupons": "Mes coupons"
   },
   "registration":{
     "join": "créer un compte One Mall",
@@ -93,9 +98,21 @@
     "placeOrder":"Passer la commande",
     "orderSuccess":"Commande créée avec succès",
     "thanksForBuying":"Merci pour votre commande sur ONE-MALL!",
-    "orderId":"Numero de la commande",
+    "orderId":"No de la commande",
     "suceessMessage":"Nous traitons cette commande avec tous les efforts possibles, veuillez attendre les prochaines notifications.",
     "viewOrder":"Voir les commandes",
     "continueShopping":"Continuer à acheter"
+  },
+  "myOrders": {
+    "orderEmpty": "Rien de commande ici",
+    "order": "Commande",
+    "orderDate": "placé à",
+    "paid":"Payé",
+    "payNow": "Payer",
+    "invoice": "La facture",
+    "toProcess": "Procéder",
+    "toDeliver": "Livrer",
+    "delivered": "Livré",
+    "complete": "Complète"
   }
 }

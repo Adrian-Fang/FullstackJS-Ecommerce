@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import Footer from '@/components/Footer.vue';
+import Footer from "./components/Footer.vue";
 export default {
-  components: { 'one-footer': Footer },
+  components: { "one-footer": Footer },
   data() {
     return {
       //empty
@@ -18,13 +18,19 @@ export default {
   },
   created() {
     //when page refresh, keep vuex data into local storage
-    window.addEventListener('beforeunload', () => {
-      localStorage.setItem('storedState', JSON.stringify(this.$store.state));
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("storedState", JSON.stringify(this.$store.state));
     });
     //when page loading, read data from local storage
-    if (localStorage.getItem('storedState')) {
-      this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(localStorage.getItem('storedState'))));
-      // localStorage.removeItem("storedState");
+    if (localStorage.getItem("storedState")) {
+      this.$store.replaceState(
+        Object.assign(
+          {},
+          this.$store.state,
+          JSON.parse(localStorage.getItem("storedState"))
+        )
+      );
+      localStorage.removeItem("storedState");
     }
   },
 };

@@ -33,7 +33,7 @@ const actions = {
     });
   },
 
-  addItemToCart({ commit, dispatch }, params) {
+  addItemToCart({ dispatch }, params) {
     return new Promise((resolve, reject) => {
       addProductToCart(params)
         .then((res) => {
@@ -49,7 +49,7 @@ const actions = {
     });
   },
 
-  delCartItem({ commit, dispatch }, params) {
+  delCartItem({  dispatch }, params) {
     return new Promise((resolve, reject) => {
       deleteCartItem(params)
         .then((res) => {
@@ -87,7 +87,7 @@ const mutations = {
     state.cartCount = 0;
   },
   CHECKOUT(state, selected) {
-    state.checkoutList = state.cartList.filter((v, i) => selected.includes(v.productId.toString()));
+    state.checkoutList = state.cartList.filter((v) => selected.includes(v.productId.toString()));
   },
   COMPLETE_CHECKOUT (state) {
     state.checkoutList = []; //after successful checkout, this list should be cleared

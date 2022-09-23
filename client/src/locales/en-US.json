@@ -3,13 +3,18 @@
   "saveBtn":"Save",
   "cancelBtn":"Cancel",
   "closeBtn":"Close",
+  "delete": "Delete",
   "home": {
     "link1":"BRAND",
     "link2":"BUYER",
     "link3":"FEATURED",
     "login":"Login",
     "logout":"Logout",
-    "register":"Register"
+    "register":"Register",
+    "profile": "Manage Profile",
+    "myAddress": "My Addresses",
+    "myOrders": "My Orders",
+    "myCoupons": "My Coupons"
   },
   "registration":{
     "join": "Create One Mall account",
@@ -97,5 +102,17 @@
     "suceessMessage":"We're processing this order with all efforts, please wait for further notifications.",
     "viewOrder":"View Order",
     "continueShopping":"Continue Shopping"
+  },
+  "myOrders": {
+    "orderEmpty": "You haven't placed any order yet",
+    "order": "Order",
+    "orderDate": "Placed at",
+    "paid":"Paid",
+    "payNow": "Pay Now",
+    "invoice": "Invoice",
+    "toProcess": "To Process",
+    "toDeliver": "To Deliver",
+    "delivered": "Delivered",
+    "complete": "Complete"
   }
 }
