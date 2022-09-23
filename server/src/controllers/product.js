@@ -5,7 +5,7 @@ module.exports = {
         const { pageNum=1, pageSize=8, sort='productPrice', keyword='' } = req.query;
         try {
             const allProducts = await productService.getAllProducts({ pageNum, pageSize, sort, keyword });
-            res.status(200).send({ status: '1', result: allProducts })
+            res.status(200).send({ status: '1', msg: 'Success', data: allProducts })
         } catch (error) {
             next(error);
         }
@@ -13,7 +13,7 @@ module.exports = {
     createOneProduct: async (req, res, next) => {
         try {
             const newProduct = await productService.createOneProduct(req.body);
-            res.status(201).send({ status: '1', result: newProduct })
+            res.status(201).send({ status: '1', msg: 'Success', data: newProduct })
         } catch (error) {
             next(error);
         }
@@ -25,7 +25,7 @@ module.exports = {
         } else {
             try {
                 const result = await productService.getOneProduct(productId);
-                res.status(200).send({ status: '1', msg: 'Success', result: result })
+                res.status(200).send({ status: '1', msg: 'Success', data: result })
             } catch (error) {
                 next(error);
             }
@@ -38,7 +38,7 @@ module.exports = {
         } else {
             try {
                 const result = await productService.updateOneProduct(productId, req.body);
-                res.status(204).send({ status: '1', msg: 'Success', result: result })
+                res.status(204).send({ status: '1', msg: 'Success', data: result })
             } catch (error) {
                 next(error);
             }

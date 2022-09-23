@@ -11,6 +11,7 @@ const getAllProducts = async ( filter ) => {
         const [rows, _] = await promisePool.query(sql)
         return rows;
     } catch (error) {
+        console.log('what the hell is the error?');
         throw(error);
     }
 };

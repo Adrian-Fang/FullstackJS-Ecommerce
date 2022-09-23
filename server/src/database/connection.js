@@ -2,7 +2,7 @@ const mysql = require('mysql2');
 const config = require('../conf');
 
 const dbConfig = config.mysql[process.env.NODE_ENV];
-const dbUri = `mysql://${dbConfig.user}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}?charset=${dbConfig.charset}`;
+const dbUri = `mysql://${dbConfig.user}:${dbConfig.password}@${dbConfig.host}/${dbConfig.database}?charset=${dbConfig.charset}`;
 
 //TODO: Option 1, use ORM lib, Sequelize 
 // const sequelize = new Sequelize(dbUri, {

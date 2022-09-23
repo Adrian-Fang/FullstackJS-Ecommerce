@@ -6,12 +6,12 @@ module.exports = {
       '/api/v1/users/logout', 
       '/api/v1/users/checkUserExist', 
       '/robots.txt',
-      '/api/v1/docs/'
+      '/api/v1/docs/',
     ],
     post: [
       '/api/v1/users/login', 
       '/api/v1/users/register', 
-      '/api/v1/users/verifyUser'
+      '/api/v1/users/verifyUser',
     ],
   },
   mysql: {
@@ -28,12 +28,13 @@ module.exports = {
       user: 'b1ccd41ff26775',
       password: 'a734da47',
       database: 'heroku_a6634ea955d8887',
+      port: 3306,
       charset: 'UTF8_GENERAL_CI',
     },
   },
   allowdOrigin: {
     production: 'https://one-mall.netlify.app',
-    dev: 'http://localhost:8081'
+    dev: 'http://localhost:8080'
   },
   emailAccountAuth: {
     user: 'one-mall@outlook.com',

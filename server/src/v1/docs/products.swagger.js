@@ -42,7 +42,7 @@ const getProducts = {
                         properties: {
                             status: {
                                 type: "string",
-                                example: "OK"
+                                example: "1"
                             },
                             data: {
                                 type: "array",

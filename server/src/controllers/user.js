@@ -31,8 +31,8 @@ module.exports = {
         });
     },
     checkLogin: (req, res, next) => {
-        if(req.userId) return res.status(200).json({status: 1, msg: 'User logged in', result: req.cookies}); //TODO: refactor or remove this check logic
-        res.status(401).json({status: 0, msg: 'User not logged in', result: ''});
+        if(req.userId) return res.status(200).json({status: '1', msg: 'User logged in', result: req.cookies}); //TODO: refactor or remove this check logic
+        res.status(401).json({status: '0', msg: 'User not logged in', result: ''});
     },
     
     register: (req, res, next) => {
@@ -72,7 +72,6 @@ module.exports = {
         const sql = `SELECT userId, userPwd,userName,avatar FROM CRM_user WHERE userId='${userId}';`;
         pool.query(sql, (err, result) => {
             if (err) {
-                console.log('SQL query returned an error:', err.message);
                 return res.status(500).json({status: 0, msg:err.message});
             }
             if(!result) return res.status(404).json({status: 0, msg: "User does not exist"});
@@ -235,9 +234,9 @@ module.exports = {
         let sql = `SELECT * FROM addresslist WHERE userId='${userId}' ORDER BY addressId DESC`;
         pool.query(sql, (err, result) => {
             if(err) {
-                res.status(500).json({ status: 0, msg: err. message, result: ''});
+                res.status(500).json({ status: '0', msg: err. message, data: ''});
             } else {
-                res.status(200).json({ status: 1, msg: 'Success', result: result})
+                res.status(200).json({ status: '1', msg: 'Success', data: result})
             }
         });
     },
@@ -245,18 +244,18 @@ module.exports = {
         let userId = req.userId;
         let defaultFlag = 1;
         let allFlag = 0;
-        let addressId = req.param('address'); // 获取前台传过来addressId值
+        let { addressId } = req.body.params;
         let sql1 = `update addresslist set isDefault=${allFlag} where userId=${userId}`;
         let sql = `update addresslist set isDefault=${defaultFlag} where userId=${userId} and addressId=${addressId}`;
         pool.query(sql1, (err1, result1) => {
             if(err1) {
-                res.status(500).json({ status: 0, msg: err1. message, result: result1});
+                res.status(500).json({ status: '0', msg: err1. message, data: result1});
             } else {
                 pool.query(sql, (err, result) => {
                      if(err) {
-                        res.status(500).json({ status: 0, msg: err1. message, result: ''});
+                        res.status(500).json({ status: '0', msg: err1. message, data: ''});
                     } else {
-                        res.status(200).json({ status: 1, msg: 'Success', result: result})
+                        res.status(200).json({ status: '1', msg: 'Success', data: result})
                     }
                 });
             }
@@ -264,29 +263,29 @@ module.exports = {
     },
     deleteAddress: (req, res, next) => {
         let userId = req.userId;
-        let addressId = req.param('addressId'); // 获取前台传过来的要删除的addressId值
+        let addressId = req.body['addressId']; // 获取前台传过来的要删除的addressId值
         let sql = `delete from addresslist where userId=${userId} and addressId=${addressId}`;
         pool.query(sql, (err, result) => {
             if(err) {
-                res.status(500).json({ status: 0, msg: err.message, result: null});
+                res.status(500).json({ status: '0', msg: err.message, data: null});
             } else {
-                res.status(204).json({ status: 1, msg: 'Success', result: result})
+                res.status(204).json({ status: '1', msg: 'Success', data: result})
             }
         })
     },
     addAddress: (req, res, next) => {
         let userId = req.userId;
         let contactPerson = req.body.params['name'];
-        let fullAddress = req.body.params['fullAddress']; // 获取前台传值
-        let contactNumber = req.body.params['contactNumber']; // 获取前台值
-        let postalCode = req.body.params['postalCode']; // 获取前台传值
+        let fullAddress = req.body.params['fullAddress'];
+        let contactNumber = req.body.params['contactNumber'];
+        let postalCode = req.body.params['postalCode'];
         let defaultFlag = 0;
         let sql = `INSERT INTO addresslist(userId,userName,fullAddress,postCode,tel,isDefault) VALUES('${userId}','${contactPerson}','${fullAddress}','${postalCode}','${contactNumber}','${defaultFlag}')`;
         pool.query(sql, (err, result) => {
             if(err) {
-                res.status(500).json({ status: 0, msg: err.message, result: null});
+                res.status(500).json({ status: '0', msg: err.message, data: null});
             } else {
-                res.status(201).json({ status: 1, msg: 'Success', result: result})
+                res.status(201).json({ status: '1', msg: 'Success', data: result})
             }
         })
     },
@@ -324,7 +323,7 @@ module.exports = {
                     let newOrderSqlQuery = `INSERT INTO OMS_orders(orderId,userId,subTotal,shipping,insurance,discount,contactPerson,contactNumber,contactAddress,contactPostalCode,orderStatus,createdAt,paymentOption,paymentStatus,paymentTime) VALUES (${newOrderId},'${userId}',${subTotal},${shipping},${insurance},${discount},'${addressData.userName}','${addressData.tel}', '${addressData.fullAddress}','${addressData.postCode}',${orderStatus},CURRENT_TIMESTAMP,'${paymentOption}',${paymentStatus},CURRENT_TIMESTAMP);`;
                         pool.query(newOrderSqlQuery, (err, result) => {
                             if (err) {
-                                res.status(500).json({ status: 0, msg: err.message, result: null});
+                                res.status(500).json({ status: '0', msg: err.message, data: null});
                             } else {
                                 console.log('Processing second step...');
                                 //Step2: processing table: OMS_order_product_relation
@@ -332,16 +331,16 @@ module.exports = {
                                 pool.query(newOrderProductRelationQuery, (err, result) => {
                                     if (err) {
                                         console.log('Error occured during insert new order relation data...');
-                                        res.status(500).json({ status: 0, msg: err.message, result: null });
+                                        res.status(500).json({ status: '0', msg: err.message, data: null });
                                     } else {
                                         //Step 3: processing table: cartlist, set checked products as checked=1
                                         let checkCartItemQuery = `UPDATE cartlist SET checked=1 WHERE deleted=0 AND checked=0 AND cartId IN (${checkedCartItems});`;
                                         pool.query(checkCartItemQuery, (err, result) => {
                                             if (err) {
                                                 console.log('Error occured during checking cart items:', checkedCartItems);
-                                                res.status(500).json({ status: 0, msg: err.message, result: null });
+                                                res.status(500).json({ status: '0', msg: err.message, data: null });
                                             } else {
-                                                res.status(204).json({ status: 1, msg: 'Success', result: result, orderId: newOrderId });
+                                                res.status(204).json({ status: '1', msg: 'Success', data: result, orderId: newOrderId });
                                             }
                                         });
                                     }
@@ -356,7 +355,7 @@ module.exports = {
             pool.query(newOrderSqlQuery, (err, result) => {
                 if (err) {
                     console.log('Error occured during insert new order data...');
-                    res.status(500).json({ status: 0, msg: err.message, result: null });
+                    res.status(500).json({ status: '0', msg: err.message, result: null });
                 } else {
                     console.log(utils.getCurrentDateTime(), ' | [1] New Order inserted: no Omise payment online');
                     console.log(utils.getCurrentDateTime(), ' | [2] Inserting relation: New Order Id is:', newOrderId);
@@ -367,7 +366,7 @@ module.exports = {
                     pool.query(newOrderProductRelationQuery, (err, result) => {
                         if (err) {
                             console.log('Error occured during insert new order relation data...');
-                            res.json({ status: 0, msg: err.message, result: result });
+                            res.json({ status: '0', msg: err.message, result: result });
                         } else {
                             console.log(utils.getCurrentDateTime(), ' | [3] Relation Inserted: New Order Id is:', newOrderId);
                             //Step 3: processing table: cartlist, set checked products as checked=1
@@ -376,10 +375,10 @@ module.exports = {
                             pool.query(checkCartItemQuery, (err, result) => {
                                 if (err) { 
                                     console.log('Error occured during checking cart items:', checkedCartItems);
-                                    res.json({status: 0, msg: err.message, result: null });
+                                    res.json({status: '0', msg: err.message, result: null });
                                 } else {
                                     console.log(utils.getCurrentDateTime(), ' | [4] Updated Cartlist: New Order Id is:', newOrderId, 'checked items are: ', checkedCartItems);
-                                    res.status(201).json({ status: 1, msg: 'Success', result: result, orderId: newOrderId});
+                                    res.status(201).json({ status: '1', msg: 'Success', result: result, orderId: newOrderId});
                                 }
                             });
                         }
@@ -391,17 +390,16 @@ module.exports = {
     getAllOrder: (req, res, next) => {
         let userId = req.userId;
         let orderQuery = `SELECT * FROM OMS_orders where userId='${userId}' and orderStatus !=9 ORDER BY createdAt DESC LIMIT ${$conf.recentOrderLength};`;
-        console.log(orderQuery);
         pool.query(orderQuery, (err, orderResult) => {
-            if(err) { res.status(500).json({ status: 0, msg: err.message, result: null}); } 
-            else if(!orderResult.length) { res.status(200).json({ status: 1, msg: 'No Order Found', result: orderResult})}
+            if(err) { res.status(500).json({ status: '0', msg: err.message, data: null}); } 
+            else if(!orderResult.length) { res.status(200).json({ status: '1', msg: 'No Order Found', data: orderResult})}
             else {
                 //Step 1: Processing orders
                 let orderListIds = [];
                 orderResult.forEach((v) => orderListIds.push(v.orderId));
                 let productsQuery = `SELECT * FROM OMS_order_product_relation WHERE orderId IN (${orderListIds.join(',')});`;
                 pool.query(productsQuery, (err, productResult) => {
-                    if (err) res.status(500).json({ status: 0, msg: err.message, result: null })
+                    if (err) res.status(500).json({ status: '0', msg: err.message, data: null })
                     else {
                         // Step 2: Processing orders-products
                         orderResult.forEach((item) => {
@@ -411,20 +409,19 @@ module.exports = {
                             });
                         });
                         //Step 3: Send processed order details back
-                        res.status(200).json({ status: 1, msg: 'Success', result: orderResult })
+                        res.status(200).json({ status: '1', msg: 'Success', data: orderResult })
                     }
                 });
             }
         });
     },
     deleteOrder: (req, res, next) => {
-        let orderId = req.body.params['orderId']; 
+        let { orderId } = req.body.params; 
         let sql = `update OMS_orders set orderStatus=9 where orderId='${orderId}' and userId='${req.userId}';`;
         pool.query(sql, (err, result) => {
-            if (err) { res.status(500).json({ status: 0, msg: err.message, result: result}) }
+            if (err) { res.status(500).json({ status: '0', msg: err.message, data: result}) }
             else {
-                console.log(result.affectedRows, 'deleted.')
-                res.status(200).json({ status: 1, msg: 'Success', result: result })
+                res.status(200).json({ status: '1', msg: 'Success', data: result })
             };
         })
     },
@@ -434,8 +431,8 @@ module.exports = {
         let paymentStatus = 3; //paymentStatus: 0=null, 1=to pay, 2=partial paid, 3=paid
         let sql = `update OMS_orders set paymentStatus=${paymentStatus} where orderId='${orderId}';`;
         pool.query(sql, (err, result) => {
-            if (err) { res.status(500).json({ status: 0, msg: err.message, result: null}); }
-            else { res.status(200).json({ status: 1, msg: 'Success', result: result}); }
+            if (err) { res.status(500).json({ status: '0', msg: err.message, data: null}); }
+            else { res.status(200).json({ status: '1', msg: 'Success', data: result}); }
         });
     }
 }

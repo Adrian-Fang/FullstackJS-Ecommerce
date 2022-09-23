@@ -25,7 +25,6 @@ if(process.env.NODE_ENV === 'production'){
   });
 
   app.use(Sentry.Handlers.requestHandler());
-  app.use(Sentry.Handlers.tracingHandler());
 }
 
 app.use(cors());
@@ -34,7 +33,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.all('*', (req, res, next) => {
   // deal with access-control-allow-origin error
@@ -49,12 +47,10 @@ app.all('*', (req, res, next) => {
   } else {
     // 拦截请求，验证 Token
     let method = req.method.toLowerCase();
-    let requestPath = req.path;
-    if ($conf.whiteListUrl[method] && util.inWhiteList(requestPath, $conf.whiteListUrl[method])) {
+    if ($conf.whiteListUrl[method] && util.inWhiteList(req.path, $conf.whiteListUrl[method])) {
       next();
     } else {
       const bearerAuth = req.headers['authorization'];
-      console.log()
       if (!bearerAuth) return res.status(401).send('Access denied, please login');
       else {
         const token = bearerAuth.split(' ')[1];
@@ -101,11 +97,9 @@ app.use((req, res, next) => {
 
 
 //error hanlder for production
-app.use((error, req, res, next) => {
-  if(error) {
-    console.log(util.getCurrentDateTime(), '\n', error);
-    res.status(error?.status || 500).send({ status: '0', msg: 'An internal error encountered.'});
-  }
+app.use((error, req, res, next) => { 
+  console.log(util.getCurrentDateTime(), '\n', error);
+  res.end(res.sentry + '\n');
 });
 
 

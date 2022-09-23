@@ -23,16 +23,14 @@ router.route('/delProduct').post(UserController.deleteProductFromCart)
 router.route('/editProductNum').get(UserController.editCartItems)
 
 //APIs: User Address Management
-router.route('/addressList').get(UserController.getAddressList)
-router.route('/setDefauleAdr').get(UserController.setDefaultAddress)
-router.route('/delAdr').get(UserController.deleteAddress)
-router.route('/insertAdr').post(UserController.addAddress)
+router.route('/addresses').get(UserController.getAddressList).post(UserController.addAddress)
+router.route('/setDefaultAdress').post(UserController.setDefaultAddress)
+router.route('/delAddress').post(UserController.deleteAddress)
 
 //APIs: User Orders
-router.route('/submitOrder').post(UserController.createOrder)
-router.route('/getOrderData').get(UserController.getAllOrder)
+router.route('/orders').get(UserController.getAllOrder).post(UserController.createOrder)
 router.route('/downloadAllOrder').get(DownloadController.downloadAllOrder)
-router.route('/delOrder').get(UserController.deleteOrder)
-router.route('/updateOrder').get(UserController.updateOrder)
+router.route('/delOrder').post(UserController.deleteOrder)
+router.route('/payOrder').post(UserController.updateOrder)
 
 module.exports = router;
