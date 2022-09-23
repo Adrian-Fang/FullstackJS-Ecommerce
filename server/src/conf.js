@@ -24,25 +24,25 @@ module.exports = {
       charset: 'UTF8_GENERAL_CI',
     },
     production: {
-      host: 'us-cdbr-east-03.cleardb.com',
-      user: 'b1ccd41ff26775',
-      password: 'a734da47',
-      database: 'heroku_a6634ea955d8887',
+      host: '',
+      user: '',
+      password: '',
+      database: '',
       port: 3306,
       charset: 'UTF8_GENERAL_CI',
     },
   },
   allowdOrigin: {
-    production: 'https://one-mall.netlify.app',
+    production: 'https://your-client-project-url.netlify.app',
     dev: 'http://localhost:8080'
   },
   emailAccountAuth: {
-    user: 'one-mall@outlook.com',
-    pass: 'Go_vgc_2020!'
+    user: 'your-email@outlook.com',
+    pass: 'yourpassword'
   },
 
   //Processing User Login Token
-  secret: 'Adrian-Fang-Key',
+  secret: 'your-own-key',
 
   //Processing Order ID prefix
   platformId: '62',
@@ -51,6 +51,6 @@ module.exports = {
   recentOrderLength: 5,
 
   //Processing Omise Payment, Server-end private testing key
-  omiseSecretKey: 'skey_test_5k17fds64zd87ukxpch',
+  omiseSecretKey: 'skey_test_your_applied_key_from_omise',
   captureCharge: false,
 };

@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 -- 转存表中的数据 `products`
 --
 
-INSERT INTO `products` (`id`, `productId`, `productName`, `productPrice`, `checked`, `productNum`, `productImg`, `sub_title`, `limit_num`, `desc`, `descImg`, `productDetails`) VALUES
+INSERT INTO `products` (`id`, `productId`, `productName`, `productPrice`, `checked`, `productNum`, `productImg`, `sub_title`, `limit_num`, `description`, `descImg`, `productDetails`) VALUES
 (1, 10001, '小米6', 2499, '0', 0, 'mi6.jpg', '此仅为支付测试商品 拍下不会发货\n', 10, '', 'xiaomi6.jpg', '小米6 全网通 4GB+64GB 亮黑色 移动联通电信4G手机 双卡双待 小米6变焦双'),
 (2, 10002, '小米笔记本', 3999, '0', 0, 'note.jpg', '此仅为支付测试商品 拍下不会发货\n', 10, '', 'xiaomi-matebook.jpg', '小米(MI)Air 13.3英寸全金属轻薄笔记本电脑(i5-7200U 8G 256G固态硬盘 全高清屏 背光键盘 Win10)银'),
 (3, 10003, '小米音响', 199, '0', 0, '1.jpg', '此仅为支付测试商品 拍下不会发货\n', 10, '', '', '小米（MI）小钢炮蓝牙音箱2 迷你便携音响 户外蓝牙音响 免提通话（黑色）'),

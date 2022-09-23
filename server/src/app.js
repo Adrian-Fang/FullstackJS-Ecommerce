@@ -20,7 +20,7 @@ const app = express();
 // Implement Sentry for error tracing, into production only
 if(process.env.NODE_ENV === 'production'){
   Sentry.init({
-    dsn: "https://eb07dca034764e8480f734e7576b2d6d@o465476.ingest.sentry.io/6422420",
+    dsn: "https://yoursentrylinkandstuff..sentry.io",
     tracesSampleRate: 1.0,
   });
 
